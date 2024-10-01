@@ -14,7 +14,7 @@ const Searchbar = ({ setSearchTerm }) => {
           className="input-group-text bg-white"
           style={{ cursor: "pointer" }}
         >
-          <i class="bi bi-search"></i>
+          <i className="bi bi-search"></i>
         </span>
       </div>
     </div>

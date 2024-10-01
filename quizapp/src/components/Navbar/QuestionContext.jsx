@@ -23,9 +23,8 @@ const QuestionProvider = ({ children }) => {
         console.error(err, "error while parsing");
         setQuestions([]);
       }
-    }
-    else{
-        setQuestions(defaultQuestion)
+    } else {
+      setQuestions(defaultQuestion);
     }
   }, []);
 
@@ -37,7 +36,6 @@ const QuestionProvider = ({ children }) => {
   }, [questions]);
 
   const addNewQuestion = (newQuestion) => {
-    console.log(newQuestion);
     const allQuestions = [...questions, newQuestion];
     setQuestions(allQuestions);
   };
@@ -47,15 +45,30 @@ const QuestionProvider = ({ children }) => {
       if (qElm.id === questionId) {
         return {
           ...qElm,
-          answers: qElm.answers ? [...qElm.answers, answer] : [answer],
+          answers: qElm.answers ? [...qElm.answers,answer] : [answer],
         };
       }
       return qElm;
     });
     setQuestions(updatedQuestions);
   };
+
+  const UpdateAnswer = (questionId, newAnswer, answerIdx) => {
+    const updatedQuestions = questions.map((qElm) => {
+      if (qElm.id === questionId) {
+        const updatedAnswers = [...qElm.answers];
+        updatedAnswers[answerIdx] = newAnswer; // Update the specific answer
+        return { ...qElm, answers: updatedAnswers };
+      }
+      return qElm;
+    });
+    setQuestions(updatedQuestions); // Update the state with new questions
+  };
+
   return (
-    <QuestionContext.Provider value={{ questions, addNewQuestion, addAnswer }}>
+    <QuestionContext.Provider
+      value={{ questions, addNewQuestion, addAnswer, UpdateAnswer }}
+    >
       {children}
     </QuestionContext.Provider>
   );

@@ -5,10 +5,9 @@ import AllQuestions from "./AllQuestions";
 import { QuestionContext } from "./QuestionContext";
 const QuestionWithAnswers = () => {
   const { questions, addAnswer } = useContext(QuestionContext);
-  console.log(questions)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  const categories = ["HTML", "CSS", "JavaScript", "ReactJs"];
+  const categories = ["HTML", "CSS", "JavaScript", "ReactJs","Java"];
   const filteredQuestions = questions?.filter((qElm) => {
     const mactchedSearch =
       qElm.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

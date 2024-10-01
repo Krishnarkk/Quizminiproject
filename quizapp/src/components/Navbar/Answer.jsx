@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 const Answer = ({questionId,addAnswer}) => {
     const [answer,setAnswer]=useState("");
+    // const [userName,setUsername]=useState()
     const handleSubmit=(e)=>{
         e.preventDefault();
         if(answer.trim()){
@@ -17,6 +18,14 @@ const Answer = ({questionId,addAnswer}) => {
   return (
     <form onSubmit={handleSubmit} className='mt-3'>
         <div className='input-group'>
+            {/* <input
+              type='text'
+              className='form-control'
+              placeholder='enter your name'
+              value={firstName}
+              onChange={(e)=>setFirstName(e.target.value)}
+              required
+            /> */}
             <input
                type='text'
                className='form-control'

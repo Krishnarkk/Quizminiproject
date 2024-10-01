@@ -5,6 +5,7 @@ import AddQuestions from './components/Navbar/AddQuestions'
 import QuestionWithAnswers from './components/Navbar/QuestionWithAnswers'
 import QuestionProvider from './components/Navbar/QuestionContext'
 import { ToastContainer } from 'react-toastify';
+import "./App.css"
 const App = () => {
   return (
     <QuestionProvider>
