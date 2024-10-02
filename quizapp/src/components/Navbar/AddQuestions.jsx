@@ -4,21 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const AddQuestions = () => {
-  const { addNewQuestion } = useContext(QuestionContext);
+  const { loggedInUser, addNewQuestion } = useContext(QuestionContext);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("JavaScript");
-  const [otherCategory,setOtherCategory]=useState("")
+  const [otherCategory, setOtherCategory] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
-  console.log(otherCategory)
+  console.log(otherCategory);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedCategory=(category==="Other")? otherCategory:category
+    const updatedCategory = category === "Other" ? otherCategory : category;
     const newQuestion = {
       id: Date.now(),
       title,
-      category : updatedCategory,
+      category: updatedCategory,
       name,
       answers: [],
     };
@@ -30,9 +30,9 @@ const AddQuestions = () => {
     navigate("/");
   };
 
-  const handleCategory=(e)=>{
-      setCategory(e.target.value)
-  }
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
   return (
     <form onSubmit={handleSubmit} className="mb-4 mt-4 container">
       <div className="mb-3">
@@ -56,8 +56,7 @@ const AddQuestions = () => {
           type="text"
           className="form-control"
           id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={loggedInUser?.username}
           required
         />
       </div>
@@ -78,9 +77,17 @@ const AddQuestions = () => {
           <option value="Other">Other</option>
         </select>
       </div>
-      {
-        category==="Other" && <input type="text" className="form-control" value={otherCategory} onChange={(e)=>{setOtherCategory(e.target.value)}} placeholder="enter your question category"/> 
-      }
+      {category === "Other" && (
+        <input
+          type="text"
+          className="form-control"
+          value={otherCategory}
+          onChange={(e) => {
+            setOtherCategory(e.target.value);
+          }}
+          placeholder="enter your question category"
+        />
+      )}
       <button type="submit" className="btn btn-danger mt-4">
         Post Question
       </button>

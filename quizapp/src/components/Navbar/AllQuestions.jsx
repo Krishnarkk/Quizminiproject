@@ -5,7 +5,7 @@ import { formatDate } from "../../common/commonFunctions";
 import UpdateAnswerComponent from "./UpdateAnswerComponent";
 import { toast } from "react-toastify";
 const AllQuestions = ({ questions }) => {
-  const { addAnswer, UpdateAnswer } = useContext(QuestionContext);
+  const { addAnswer, UpdateAnswer,loggedInUser } = useContext(QuestionContext);
   const [updatedAnswer, setUpdatedAnswer] = useState("");
   const [currentQuestionId, setCurrentQuestionId] = useState(null);
   const [currentAnswerIdx, setCurrentAnswerIdx] = useState(null);
@@ -54,7 +54,7 @@ const AllQuestions = ({ questions }) => {
                     <div className="answer-icons">
                       <i
                         class="bi bi-pencil"
-                        style={{cursor:"pointer"}}
+                        style={{ cursor: "pointer" }}
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
                         onClick={() => handleEditAnswer(question, idx)}
@@ -69,7 +69,7 @@ const AllQuestions = ({ questions }) => {
             <Answer questionId={question.id} addAnswer={addAnswer} />
             <div className="d-flex justify-content-between mt-4">
               <h5 className="text-truncate mb-0 small">
-                Posted By: {question.name ? question.name : "John"}
+                Posted By: {loggedInUser.username ? loggedInUser.username : "John"}
               </h5>
               <h6 className="text-muted small">{formatDate(question.id)}</h6>
             </div>
