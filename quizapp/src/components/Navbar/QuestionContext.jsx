@@ -5,14 +5,21 @@
 // const defaultQuestion = [
 //   {
 //     id: 1,
-//     title: "What is HTML?",
-//     category: "HTML",
-//     answers: ["Hyper Text Markup Language"],
+//     title: "What is React?",
+//     category: "JavaScript",
+//     answers: [
+//       {
+//         text: "React is a JavaScript library for building user interfaces.",
+//         rating: 4,
+//         answeredBy: "John",
+//         answeredAt: "2024-10-01T12:00:00Z",
+//       },
+//     ],
 //   },
 // ];
 
 // const QuestionProvider = ({ children }) => {
-//   const [questions, setQuestions] = useState([]);
+//   const [questions, setQuestions] = useState(defaultQuestion);
 //   const [loggedInUser, setLoggedInUser] = useState(null);
 
 //   // Get all questions and the logged-in user from local storage on initial load
@@ -20,6 +27,7 @@
 //     const storedQuestions = localStorage.getItem("questions");
 //     const storedUser = localStorage.getItem("currentUser");
 
+//     // Check if questions exist in local storage
 //     if (storedQuestions) {
 //       try {
 //         const parsedQuestions = JSON.parse(storedQuestions);
@@ -36,8 +44,20 @@
 //       setQuestions(defaultQuestion); // If no questions in local storage, load default
 //     }
 
+//     // Check if a user is logged in
 //     if (storedUser) {
-//       setLoggedInUser(JSON.parse(storedUser)); // Set logged in user
+//       try {
+//         const parsedUser = JSON.parse(storedUser);
+//         if (parsedUser) {
+//           setLoggedInUser(parsedUser); // Set logged in user
+//         } else {
+//           console.error("No valid user found in localStorage");
+//           setLoggedInUser(null);
+//         }
+//       } catch (err) {
+//         console.error("Error while parsing user data:", err);
+//         setLoggedInUser(null); // Clear user if there's an error parsing
+//       }
 //     }
 //   }, []);
 
@@ -52,8 +72,6 @@
 //   useEffect(() => {
 //     if (loggedInUser) {
 //       localStorage.setItem("currentUser", JSON.stringify(loggedInUser));
-//     } else {
-//       localStorage.removeItem("currentUser");
 //     }
 //   }, [loggedInUser]);
 
@@ -63,18 +81,27 @@
 //   };
 
 //   // Function to add an answer to a question
-//   const addAnswer = (questionId, answer) => {
-//     const updatedQuestions = questions.map((question) => {
-//       if (question.id === questionId) {
-//         return {
-//           ...question,
-//           answers: [...(question.answers || []), answer],
-//         };
-//       }
-//       return question;
-//     });
-//     setQuestions(updatedQuestions);
-//   };
+//   // Add answer with rating, user, and timestamp
+// const addAnswer = (questionId, newAnswer) => {
+//   // Update the questions state
+//   const updatedQuestions = questions.map((question) => {
+//     // Check if the current question is the one we want to update
+//     if (question.id === questionId) {
+//       // Create a new answers array with the new answer added
+//       const updatedAnswers = [...question.answers, newAnswer];
+//       // Return the updated question with the new answers
+//       return { ...question, answers: updatedAnswers };
+//     }
+//     // Return the question unchanged if it doesn't match
+//     return question;
+//   });
+
+//   // Update the state with the new questions array
+//   setQuestions(updatedQuestions);
+
+//   // Update localStorage to reflect the changes
+//   localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+// };
 
 //   // Function to update an answer
 //   const updateAnswer = (questionId, newAnswer, answerIdx) => {
@@ -89,6 +116,22 @@
 //     setQuestions(updatedQuestions);
 //   };
 
+//   const rateAnswer = (questionId, answerIdx, newRating) => {
+//     setQuestions((prevQuestions) =>
+//       prevQuestions.map((question) =>
+//         question.id === questionId
+//           ? {
+//               ...question,
+//               answers: question.answers.map((answer, idx) =>
+//                 idx === answerIdx
+//                   ? { ...answer, rating: newRating } // Update rating for the specific answer
+//                   : answer
+//               ),
+//             }
+//           : question
+//       )
+//     );
+//   };
 //   // Signup function to register a new user
 //   const signUp = (username, password) => {
 //     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -137,6 +180,7 @@
 //         login,
 //         logout,
 //         signUp,
+//         rateAnswer,
 //         loggedInUser,
 //       }}
 //     >
@@ -154,17 +198,24 @@ export const QuestionContext = createContext();
 const defaultQuestion = [
   {
     id: 1,
-    title: "What is HTML?",
-    category: "HTML",
-    answers: ["Hyper Text Markup Language"],
+    title: "What is React?",
+    category: "JavaScript",
+    answers: [
+      {
+        text: "React is a JavaScript library for building user interfaces.",
+        rating: 4,
+        answeredBy: "John",
+        answeredAt: "2024-10-01T12:00:00Z",
+      },
+    ],
   },
 ];
 
 const QuestionProvider = ({ children }) => {
-  const [questions, setQuestions] = useState(defaultQuestion);
+  const [questions, setQuestions] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  // Get all questions and the logged-in user from local storage on initial load
+  // Load questions and the logged-in user from local storage on initial load
   useEffect(() => {
     const storedQuestions = localStorage.getItem("questions");
     const storedUser = localStorage.getItem("currentUser");
@@ -173,7 +224,7 @@ const QuestionProvider = ({ children }) => {
     if (storedQuestions) {
       try {
         const parsedQuestions = JSON.parse(storedQuestions);
-        if (parsedQuestions.length > 0) {
+        if (Array.isArray(parsedQuestions) && parsedQuestions.length > 0) {
           setQuestions(parsedQuestions); // Set questions if present in local storage
         } else {
           setQuestions(defaultQuestion); // Fallback to default questions
@@ -186,16 +237,15 @@ const QuestionProvider = ({ children }) => {
       setQuestions(defaultQuestion); // If no questions in local storage, load default
     }
 
-    // Check if a user is logged in, if not, set null
+    // Check if a user is logged in
     if (storedUser) {
       try {
-        setLoggedInUser(JSON.parse(storedUser)); // Set logged in user
+        const parsedUser = JSON.parse(storedUser);
+        setLoggedInUser(parsedUser); // Set logged in user
       } catch (err) {
         console.error("Error while parsing user data:", err);
         setLoggedInUser(null); // Clear user if there's an error parsing
       }
-    } else {
-      setLoggedInUser(null); // No user is logged in
     }
   }, []);
 
@@ -211,7 +261,7 @@ const QuestionProvider = ({ children }) => {
     if (loggedInUser) {
       localStorage.setItem("currentUser", JSON.stringify(loggedInUser));
     } else {
-      localStorage.removeItem("currentUser");
+      localStorage.removeItem("currentUser"); // Remove user from local storage when logged out
     }
   }, [loggedInUser]);
 
@@ -221,17 +271,17 @@ const QuestionProvider = ({ children }) => {
   };
 
   // Function to add an answer to a question
-  const addAnswer = (questionId, answer) => {
+  const addAnswer = (questionId, newAnswer) => {
     const updatedQuestions = questions.map((question) => {
       if (question.id === questionId) {
-        return {
-          ...question,
-          answers: [...(question.answers || []), answer],
-        };
+        const updatedAnswers = [...question.answers, newAnswer];
+        return { ...question, answers: updatedAnswers };
       }
       return question;
     });
+
     setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions));
   };
 
   // Function to update an answer
@@ -245,6 +295,25 @@ const QuestionProvider = ({ children }) => {
       return question;
     });
     setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
+  };
+
+  // Function to rate an answer
+  const rateAnswer = (questionId, answerIdx, newRating) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((question) =>
+        question.id === questionId
+          ? {
+              ...question,
+              answers: question.answers.map((answer, idx) =>
+                idx === answerIdx
+                  ? { ...answer, rating: newRating } // Update rating for the specific answer
+                  : answer
+              ),
+            }
+          : question
+      )
+    );
   };
 
   // Signup function to register a new user
@@ -295,6 +364,7 @@ const QuestionProvider = ({ children }) => {
         login,
         logout,
         signUp,
+        rateAnswer,
         loggedInUser,
       }}
     >
@@ -304,4 +374,3 @@ const QuestionProvider = ({ children }) => {
 };
 
 export default QuestionProvider;
-

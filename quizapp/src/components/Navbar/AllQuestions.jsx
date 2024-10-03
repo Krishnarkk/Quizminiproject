@@ -1,14 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { QuestionContext } from "./QuestionContext";
-import Answer from "./Answer";
+import { Link } from "react-router-dom"; // Import Link to navigate to new page
 import { formatDate } from "../../common/commonFunctions";
-import UpdateAnswerComponent from "./UpdateAnswerComponent";
-import { toast } from "react-toastify";
+
 const AllQuestions = ({ questions }) => {
-  const { addAnswer, UpdateAnswer, loggedInUser } = useContext(QuestionContext);
-  const [updatedAnswer, setUpdatedAnswer] = useState("");
-  const [currentQuestionId, setCurrentQuestionId] = useState(null);
-  const [currentAnswerIdx, setCurrentAnswerIdx] = useState(null);
+  const { loggedInUser } = useContext(QuestionContext);
+
   if (questions?.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center  py-5">
@@ -16,24 +13,9 @@ const AllQuestions = ({ questions }) => {
       </div>
     );
   }
+
   const latestQuestions = questions?.sort((a, b) => b.id - a.id);
-  const handleEditAnswer = (qElm, answerIdx) => {
-    setCurrentQuestionId(qElm.id);
-    setCurrentAnswerIdx(answerIdx);
-    setUpdatedAnswer(qElm.answers[answerIdx]);
-  };
-  const handleUpdate = () => {
-    if (currentAnswerIdx !== null && currentQuestionId !== null) {
-      UpdateAnswer(currentQuestionId, updatedAnswer, currentAnswerIdx);
-      setCurrentQuestionId(null);
-      setCurrentAnswerIdx(null);
-      setUpdatedAnswer("");
-      toast.success("Yours answer is updated..!!", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    }
-  };
+
   return (
     <div>
       {latestQuestions?.map((question, idx) => (
@@ -43,85 +25,32 @@ const AllQuestions = ({ questions }) => {
               <span className="badge bg-secondary"> {question.category}</span>
             </h6>
             <h5 className="card-title text-danger">{question.title}?</h5>
-            <p className="card-text">Answers:</p>
+            <p className="card-text">Answer:</p>
             <ul>
               {question.answers.length > 0 ? (
-                question.answers?.map((answer, idx) => (
-                  <div className="d-flex justify-content-between">
-                    <li key={idx} className="text-success">
-                      {answer}
-                    </li>
-                    <div className="answer-icons">
-                      <i
-                        class="bi bi-pencil"
-                        style={{ cursor: "pointer" }}
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                        onClick={() => handleEditAnswer(question, idx)}
-                      ></i>
-                    </div>
-                  </div>
-                ))
+                // Show only the first answer
+                <li className="text-success">{question?.answers[0].text}</li>
               ) : (
                 <p>No answers yet.</p>
               )}
             </ul>
-            <Answer questionId={question.id} addAnswer={addAnswer} />
+
+            {/* Add answer button which navigates to a new page */}
+            <Link to={`/add-answer/${question.id}`}>
+              <button className="btn btn-primary">
+                Click to Add Your Answer
+              </button>
+            </Link>
+
             <div className="d-flex justify-content-between mt-4">
               <h5 className="text-truncate mb-0 small">
-                Posted By:{" "}
-                {loggedInUser?.username ? loggedInUser.username : "John"}
+                Posted By: {loggedInUser?.username || "John"}
               </h5>
               <h6 className="text-muted small">{formatDate(question.id)}</h6>
             </div>
           </div>
         </div>
       ))}
-      <div
-        class="modal fade"
-        id="exampleModal"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5 text-success" id="exampleModalLabel">
-                Update your answer
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <UpdateAnswerComponent
-                setUpdatedAnswer={setUpdatedAnswer}
-                updatedAnswer={updatedAnswer}
-              />
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                class="btn btn-primary"
-                onClick={handleUpdate}
-              >
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

@@ -8,14 +8,16 @@ import Login from "./components/Navbar/RegistrationAndLogin/Login";
 import Signup from "./components/Navbar/RegistrationAndLogin/Signup";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
+import AddAnswers from "./components/Navbar/AddAnswers";
 const App = () => {
   return (
     <QuestionProvider>
       <Router>
         <Navbar />
         <Routes>
-          <Route path={"/"} element={<QuestionWithAnswers />}/>
-          <Route path="/add-question" element={<AddQuestions />}/>
+          <Route path={"/"} element={<QuestionWithAnswers />} />
+          <Route path="/add-question" element={<AddQuestions />} />
+          <Route path="/add-answer/:questionId" element={<AddAnswers />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
