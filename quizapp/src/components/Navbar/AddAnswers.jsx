@@ -6,11 +6,14 @@ import StarRating from "./StarRating";
 
 const AddAnswers = () => {
   const { questionId } = useParams();
-  const { questions, addAnswer, rateAnswer, loggedInUser } =
+  const { questions, addAnswer, rateAnswer, updateAnswer, loggedInUser } =
     useContext(QuestionContext);
-  console.log(loggedInUser);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editAnswerText, setEditAnswerText] = useState("");
+  const [editAnswerRating, setEditAnswerRating] = useState(0);
+  const [currentAnswerIndex, setCurrentAnswerIndex] = useState(null);
 
   useEffect(() => {
     const question = questions.find((q) => q.id === parseInt(questionId));
@@ -18,13 +21,13 @@ const AddAnswers = () => {
       setCurrentQuestion(question);
     }
   }, [questionId, questions]);
-  console.log(currentQuestion);
+
   const handleAnswerSubmit = () => {
     if (newAnswer.trim()) {
       addAnswer(currentQuestion.id, {
         text: newAnswer,
-        rating: 0, // Default rating
-        answeredBy: loggedInUser?.username, // Replace this with actual logged-in user
+        rating: 0,
+        answeredBy: loggedInUser?.username,
         answeredAt: new Date().toISOString(),
       });
       setNewAnswer("");
@@ -37,6 +40,32 @@ const AddAnswers = () => {
   const handleRating = (answerIdx, rating) => {
     rateAnswer(currentQuestion.id, answerIdx, rating);
     toast.success("Rating updated successfully!", { autoClose: 2000 });
+  };
+
+  const openEditModal = (answer, index) => {
+    setEditAnswerText(answer.text);
+    setEditAnswerRating(answer.rating);
+    setCurrentAnswerIndex(index);
+    setShowModal(true);
+  };
+
+  const handleEditAnswerSubmit = () => {
+    if (editAnswerText.trim()) {
+      updateAnswer(
+        currentQuestion.id,
+        {
+          text: editAnswerText,
+          rating: editAnswerRating,
+          answeredBy: loggedInUser?.username,
+          answeredAt: new Date().toISOString(),
+        },
+        currentAnswerIndex
+      );
+      setShowModal(false);
+      toast.success("Answer updated successfully!", { autoClose: 2000 });
+    } else {
+      toast.error("Please provide an updated answer!", { autoClose: 3000 });
+    }
   };
 
   if (!currentQuestion) {
@@ -52,11 +81,10 @@ const AddAnswers = () => {
         {currentQuestion.answers.length > 0 ? (
           currentQuestion.answers.map((answer, index) => (
             <li key={index} className="mb-2">
-              {/* Render the specific properties of the answer object */}
               <p>
                 {answer.text} -{" "}
                 <span className="text-muted small">
-                  Answered by <b>{loggedInUser?.username.toUpperCase()}</b> on{" "}
+                  Answered by <b>{answer.answeredBy.toUpperCase()}</b> on{" "}
                   {new Date(answer.answeredAt).toLocaleString()}
                 </span>
               </p>
@@ -67,6 +95,12 @@ const AddAnswers = () => {
                   setRating={(rating) => handleRating(index, rating)}
                 />
               </div>
+              <button
+                className="btn btn-secondary btn-sm mt-1"
+                onClick={() => openEditModal(answer, index)}
+              >
+                Edit
+              </button>
             </li>
           ))
         ) : (
@@ -86,6 +120,60 @@ const AddAnswers = () => {
           Submit Answer
         </button>
       </div>
+
+      {/* Modal for editing answer */}
+      <div
+        className={`modal ${showModal ? "show" : ""}`}
+        style={{ display: showModal ? "block" : "none" }}
+        tabIndex="-1"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Edit Answer</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <textarea
+                className="form-control"
+                value={editAnswerText}
+                onChange={(e) => setEditAnswerText(e.target.value)}
+                placeholder="Edit your answer here"
+              />
+              <div className="mt-2">
+                <StarRating
+                  value={editAnswerRating}
+                  setRating={setEditAnswerRating}
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleEditAnswerSubmit}
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Background overlay for modal */}
+      {showModal && <div className="modal-backdrop fade show"></div>}
     </div>
   );
 };

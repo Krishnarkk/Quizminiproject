@@ -19,10 +19,10 @@
 // ];
 
 // const QuestionProvider = ({ children }) => {
-//   const [questions, setQuestions] = useState(defaultQuestion);
+//   const [questions, setQuestions] = useState([]);
 //   const [loggedInUser, setLoggedInUser] = useState(null);
 
-//   // Get all questions and the logged-in user from local storage on initial load
+//   // Load questions and the logged-in user from local storage on initial load
 //   useEffect(() => {
 //     const storedQuestions = localStorage.getItem("questions");
 //     const storedUser = localStorage.getItem("currentUser");
@@ -31,7 +31,7 @@
 //     if (storedQuestions) {
 //       try {
 //         const parsedQuestions = JSON.parse(storedQuestions);
-//         if (parsedQuestions.length > 0) {
+//         if (Array.isArray(parsedQuestions) && parsedQuestions.length > 0) {
 //           setQuestions(parsedQuestions); // Set questions if present in local storage
 //         } else {
 //           setQuestions(defaultQuestion); // Fallback to default questions
@@ -48,12 +48,7 @@
 //     if (storedUser) {
 //       try {
 //         const parsedUser = JSON.parse(storedUser);
-//         if (parsedUser) {
-//           setLoggedInUser(parsedUser); // Set logged in user
-//         } else {
-//           console.error("No valid user found in localStorage");
-//           setLoggedInUser(null);
-//         }
+//         setLoggedInUser(parsedUser); // Set logged in user
 //       } catch (err) {
 //         console.error("Error while parsing user data:", err);
 //         setLoggedInUser(null); // Clear user if there's an error parsing
@@ -72,6 +67,8 @@
 //   useEffect(() => {
 //     if (loggedInUser) {
 //       localStorage.setItem("currentUser", JSON.stringify(loggedInUser));
+//     } else {
+//       localStorage.removeItem("currentUser"); // Remove user from local storage when logged out
 //     }
 //   }, [loggedInUser]);
 
@@ -81,27 +78,18 @@
 //   };
 
 //   // Function to add an answer to a question
-//   // Add answer with rating, user, and timestamp
-// const addAnswer = (questionId, newAnswer) => {
-//   // Update the questions state
-//   const updatedQuestions = questions.map((question) => {
-//     // Check if the current question is the one we want to update
-//     if (question.id === questionId) {
-//       // Create a new answers array with the new answer added
-//       const updatedAnswers = [...question.answers, newAnswer];
-//       // Return the updated question with the new answers
-//       return { ...question, answers: updatedAnswers };
-//     }
-//     // Return the question unchanged if it doesn't match
-//     return question;
-//   });
+//   const addAnswer = (questionId, newAnswer) => {
+//     const updatedQuestions = questions.map((question) => {
+//       if (question.id === questionId) {
+//         const updatedAnswers = [...question.answers, newAnswer];
+//         return { ...question, answers: updatedAnswers };
+//       }
+//       return question;
+//     });
 
-//   // Update the state with the new questions array
-//   setQuestions(updatedQuestions);
-
-//   // Update localStorage to reflect the changes
-//   localStorage.setItem("questions", JSON.stringify(updatedQuestions));
-// };
+//     setQuestions(updatedQuestions);
+//     localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+//   };
 
 //   // Function to update an answer
 //   const updateAnswer = (questionId, newAnswer, answerIdx) => {
@@ -114,8 +102,10 @@
 //       return question;
 //     });
 //     setQuestions(updatedQuestions);
+//     localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
 //   };
 
+//   // Function to rate an answer
 //   const rateAnswer = (questionId, answerIdx, newRating) => {
 //     setQuestions((prevQuestions) =>
 //       prevQuestions.map((question) =>
@@ -132,6 +122,7 @@
 //       )
 //     );
 //   };
+
 //   // Signup function to register a new user
 //   const signUp = (username, password) => {
 //     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -270,6 +261,26 @@ const QuestionProvider = ({ children }) => {
     setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
   };
 
+  // Function to delete a question
+  const deleteQuestion = (questionId) => {
+    const updatedQuestions = questions.filter(
+      (question) => question.id !== questionId
+    );
+    setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+  };
+  //edit question
+  const editQuestion = (questionId, updatedTitle, updatedCategory) => {
+    const updatedQuestions = questions.map((question) =>
+      question.id === questionId
+        ? { ...question, title: updatedTitle, category: updatedCategory }
+        : question
+    );
+
+    setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+  };
+
   // Function to add an answer to a question
   const addAnswer = (questionId, newAnswer) => {
     const updatedQuestions = questions.map((question) => {
@@ -294,7 +305,8 @@ const QuestionProvider = ({ children }) => {
       }
       return question;
     });
-    setQuestions(updatedQuestions);
+
+    setQuestions(updatedQuestions); // Update state
     localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
   };
 
@@ -359,12 +371,15 @@ const QuestionProvider = ({ children }) => {
       value={{
         questions,
         addNewQuestion,
+        deleteQuestion, // <-- Add deleteQuestion to the context
         addAnswer,
         updateAnswer,
         login,
         logout,
         signUp,
         rateAnswer,
+        deleteQuestion,
+        editQuestion,
         loggedInUser,
       }}
     >

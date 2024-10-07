@@ -7,7 +7,7 @@ const QuestionWithAnswers = () => {
   const { questions, addAnswer } = useContext(QuestionContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  const categories = ["HTML", "CSS", "JavaScript", "ReactJs","Java"];
+  const categories = ["HTML", "CSS", "JavaScript", "ReactJs", "Java"];
   const filteredQuestions = questions?.filter((qElm) => {
     const mactchedSearch =
       qElm.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -20,6 +20,7 @@ const QuestionWithAnswers = () => {
   });
   return (
     <div className="container d-flex flex-column justify-content-center">
+      <h1 className="text-center text-success">All Questions and Answers</h1>
       <Searchbar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <Category
         categories={categories}

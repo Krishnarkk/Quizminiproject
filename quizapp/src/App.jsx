@@ -9,6 +9,7 @@ import Signup from "./components/Navbar/RegistrationAndLogin/Signup";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import AddAnswers from "./components/Navbar/AddAnswers";
+import Footer from "./components/Navbar/Footer";
 const App = () => {
   return (
     <QuestionProvider>
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
+        <Footer />
       </Router>
       <ToastContainer />
     </QuestionProvider>
