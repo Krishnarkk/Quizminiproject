@@ -21,12 +21,9 @@ const AddQuestions = () => {
       category: updatedCategory,
       name,
       answers: [],
+      postedBy:loggedInUser?.username
     };
     addNewQuestion(newQuestion);
-    toast.warning("New question added!!", {
-      position: "top-center",
-      autoClose: 3000,
-    });
     navigate("/");
   };
 

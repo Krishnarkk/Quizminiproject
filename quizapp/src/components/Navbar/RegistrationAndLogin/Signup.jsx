@@ -8,9 +8,13 @@ const Signup = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,}$/;
   const handleSignup = (e) => {
     e.preventDefault();
+    if (!passwordRegex.test(password)) {
+      toast.error("Password must be at least 6 characters long, contain 1 uppercase letter, 1 lowercase letter, and 1 number.",{position:"top-center"});
+      return;
+    }
     const response = signUp(username, password);
     if (response.success) {
       toast.success("Signup successful");

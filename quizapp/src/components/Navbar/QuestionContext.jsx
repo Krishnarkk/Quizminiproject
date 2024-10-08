@@ -183,6 +183,7 @@
 // export default QuestionProvider;
 
 import React, { useState, useEffect, createContext } from "react";
+import { toast } from "react-toastify";
 export const QuestionContext = createContext();
 
 // Default questions to load if local storage is empty
@@ -199,6 +200,7 @@ const defaultQuestion = [
         answeredAt: "2024-10-01T12:00:00Z",
       },
     ],
+    postedBy:"John"
   },
 ];
 
@@ -258,9 +260,14 @@ const QuestionProvider = ({ children }) => {
 
   // Function to add a new question
   const addNewQuestion = (newQuestion) => {
-    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    const isDuplicate = questions.some((question) => question.title.toLowerCase() === newQuestion.title.toLowerCase());
+    if (!isDuplicate) {
+      setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+      toast.success("Your question was added!", { position: "top-center" });
+    } else {
+      toast.warning("Duplicate question, same question is already added!", { position: "top-center" });
+    }
   };
-
   // Function to delete a question
   const deleteQuestion = (questionId) => {
     const updatedQuestions = questions.filter(
@@ -367,6 +374,7 @@ const QuestionProvider = ({ children }) => {
   };
 
   return (
+    <>
     <QuestionContext.Provider
       value={{
         questions,
@@ -385,6 +393,8 @@ const QuestionProvider = ({ children }) => {
     >
       {children}
     </QuestionContext.Provider>
+    
+    </>
   );
 };
 
