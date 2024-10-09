@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-const Searchbar = ({ setSearchTerm }) => {
+const Searchbar = React.memo(({ setSearchTerm }) => {
   return (
     <div className="mb-4 mt-4">
       <div className="input-group">
@@ -19,6 +19,6 @@ const Searchbar = ({ setSearchTerm }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Searchbar;

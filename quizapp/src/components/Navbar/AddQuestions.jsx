@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 
-const AddQuestions = () => {
+const AddQuestions = React.memo(() => {
   const { loggedInUser, addNewQuestion } = useContext(QuestionContext);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("JavaScript");
@@ -11,16 +11,19 @@ const AddQuestions = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const updatedCategory = useMemo(() => {
+    return category === "Other" ? otherCategory : category;
+  }, [category, otherCategory]);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    const updatedCategory = category === "Other" ? otherCategory : category;
     const newQuestion = {
       id: Date.now(),
       title,
       category: updatedCategory,
       answers: [],
-      postedBy: loggedInUser?.username,
+      postedBy: loggedInUser?.username || "",
     };
 
     setTimeout(() => {
@@ -59,7 +62,7 @@ const AddQuestions = () => {
             type="text"
             className="form-control"
             id="name"
-            value={loggedInUser?.username}
+            value={loggedInUser?.username || ""}
             readOnly
           />
         </div>
@@ -99,6 +102,6 @@ const AddQuestions = () => {
       </form>
     </div>
   );
-};
+});
 
 export default AddQuestions;

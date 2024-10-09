@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useCallback, useMemo } from "react";
 import { toast } from "react-toastify";
 export const QuestionContext = createContext();
 
@@ -34,9 +34,9 @@ const QuestionProvider = ({ children }) => {
       try {
         const parsedQuestions = JSON.parse(storedQuestions);
         if (Array.isArray(parsedQuestions) && parsedQuestions.length > 0) {
-          setQuestions(parsedQuestions); // Set questions if present in local storage
+          setQuestions(parsedQuestions);
         } else {
-          setQuestions(defaultQuestion); // Fallback to default questions
+          setQuestions(defaultQuestion);
         }
       } catch (err) {
         console.error("Error while parsing questions:", err);
@@ -75,7 +75,7 @@ const QuestionProvider = ({ children }) => {
   }, [loggedInUser]);
 
   // Function to add a new question
-  const addNewQuestion = (newQuestion) => {
+  const addNewQuestion = useCallback((newQuestion) => {
     const isDuplicate = questions.some(
       (question) =>
         question.title.toLowerCase() === newQuestion.title.toLowerCase()
@@ -88,17 +88,18 @@ const QuestionProvider = ({ children }) => {
         position: "top-center",
       });
     }
-  };
+  },[questions]);
+
   // Function to delete a question
-  const deleteQuestion = (questionId) => {
+  const deleteQuestion = useCallback((questionId) => {
     const updatedQuestions = questions.filter(
       (question) => question.id !== questionId
     );
     setQuestions(updatedQuestions);
     localStorage.setItem("questions", JSON.stringify(updatedQuestions));
-  };
+  },[questions]);
   //edit question
-  const editQuestion = (questionId, updatedTitle, updatedCategory) => {
+  const editQuestion = useCallback((questionId, updatedTitle, updatedCategory) => {
     const updatedQuestions = questions.map((question) =>
       question.id === questionId
         ? { ...question, title: updatedTitle, category: updatedCategory }
@@ -107,10 +108,10 @@ const QuestionProvider = ({ children }) => {
 
     setQuestions(updatedQuestions);
     localStorage.setItem("questions", JSON.stringify(updatedQuestions));
-  };
+  },[questions]);
 
   // Function to add an answer to a question
-  const addAnswer = (questionId, newAnswer) => {
+  const addAnswer = useCallback((questionId, newAnswer) => {
     const updatedQuestions = questions.map((question) => {
       if (question.id === questionId) {
         const updatedAnswers = [...question.answers, newAnswer];
@@ -121,10 +122,10 @@ const QuestionProvider = ({ children }) => {
 
     setQuestions(updatedQuestions);
     localStorage.setItem("questions", JSON.stringify(updatedQuestions));
-  };
+  },[questions]);
 
   // Function to update an answer
-  const updateAnswer = (questionId, newAnswer, answerIdx) => {
+  const updateAnswer = useCallback((questionId, newAnswer, answerIdx) => {
     const updatedQuestions = questions.map((question) => {
       if (question.id === questionId) {
         const updatedAnswers = [...question.answers];
@@ -136,10 +137,10 @@ const QuestionProvider = ({ children }) => {
 
     setQuestions(updatedQuestions); // Update state
     localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
-  };
+  },[questions]);
 
   // Function to rate an answer
-  const rateAnswer = (questionId, answerIdx, newRating) => {
+  const rateAnswer = useCallback((questionId, answerIdx, newRating) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((question) =>
         question.id === questionId
@@ -154,10 +155,10 @@ const QuestionProvider = ({ children }) => {
           : question
       )
     );
-  };
+  },[]);
 
   // Signup function to register a new user
-  const signUp = (username, password) => {
+  const signUp = useCallback((username, password) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const userExists = users.some((user) => user.username === username);
 
@@ -170,10 +171,10 @@ const QuestionProvider = ({ children }) => {
     } else {
       return { success: false, message: "User already exists" };
     }
-  };
+  },[]);
 
   // Login function to authenticate a user
-  const login = (username, password) => {
+  const login = useCallback((username, password) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(
       (userElm) =>
@@ -186,31 +187,46 @@ const QuestionProvider = ({ children }) => {
     } else {
       return { success: false, message: "Invalid username or password" };
     }
-  };
+  },[]);
 
   // Logout function to clear the current user
-  const logout = () => {
+  const logout = useCallback(() => {
     setLoggedInUser(null);
     localStorage.removeItem("currentUser"); // Remove user from local storage
-  };
+  },[]);
 
+  const contextValue=useMemo(()=>{
+    return {
+      questions,
+      addNewQuestion,
+      deleteQuestion,
+      addAnswer,
+      updateAnswer,
+      login,
+      logout,
+      signUp,
+      rateAnswer,
+      deleteQuestion,
+      editQuestion,
+      loggedInUser,
+    }
+  },[questions,
+    addNewQuestion,
+    deleteQuestion,
+    addAnswer,
+    updateAnswer,
+    login,
+    logout,
+    signUp,
+    rateAnswer,
+    deleteQuestion,
+    editQuestion,
+    loggedInUser,])
+    
   return (
     <>
       <QuestionContext.Provider
-        value={{
-          questions,
-          addNewQuestion,
-          deleteQuestion,
-          addAnswer,
-          updateAnswer,
-          login,
-          logout,
-          signUp,
-          rateAnswer,
-          deleteQuestion,
-          editQuestion,
-          loggedInUser,
-        }}
+        value={contextValue}
       >
         {children}
       </QuestionContext.Provider>

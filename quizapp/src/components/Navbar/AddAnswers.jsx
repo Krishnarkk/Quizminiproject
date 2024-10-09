@@ -172,7 +172,7 @@ const AddAnswers = () => {
         </div>
       </div>
 
-      {/* Background overlay for modal */}
+     
       {showModal && <div className="modal-backdrop fade show"></div>}
     </div>
   );

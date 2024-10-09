@@ -1,25 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Searchbar from "./Searchbar";
 import Category from "./Category";
 import AllQuestions from "./AllQuestions";
 import { QuestionContext } from "./QuestionContext";
+import useDebounce from "../../common/useDebounce";
 
 const QuestionWithAnswers = () => {
   const { questions, addAnswer } = useContext(QuestionContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
   const categories = ["HTML", "CSS", "JavaScript", "ReactJs", "Java"];
-
-  const filteredQuestions = questions?.filter((qElm) => {
+  const debouncedSearchTerm=useDebounce(searchTerm,400);
+  
+  const filteredQuestions =useMemo(()=>{
+  return questions?.filter((qElm) => {
     const matchedSearch =
-      qElm.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      qElm.title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
       qElm.answers.some((answer) =>
-        answer?.text?.toLowerCase().includes(searchTerm.toLowerCase())
+        answer?.text?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
       );
     const matchedCategory =
       selectCategory === "" || qElm.category === selectCategory;
     return matchedSearch && matchedCategory;
   });
+},[questions,debouncedSearchTerm,selectCategory])
 
   return (
     <div className="container d-flex flex-column justify-content-center">

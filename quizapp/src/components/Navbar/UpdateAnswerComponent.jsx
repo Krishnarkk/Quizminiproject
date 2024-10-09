@@ -1,5 +1,5 @@
 import React from "react";
-const UpdateAnswerComponent = ({ updatedAnswer, setUpdatedAnswer }) => {
+const UpdateAnswerComponent = React.memo(({ updatedAnswer, setUpdatedAnswer }) => {
   return (
     <div>
       <form className="mt-3">
@@ -14,6 +14,6 @@ const UpdateAnswerComponent = ({ updatedAnswer, setUpdatedAnswer }) => {
       </form>
     </div>
   );
-};
+});
 
 export default UpdateAnswerComponent;

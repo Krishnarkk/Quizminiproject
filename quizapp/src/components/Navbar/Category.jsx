@@ -1,6 +1,6 @@
 import React from "react";
 
-const Category = ({ categories, selectCategory, setSelectCategory }) => {
+const Category = React.memo(({ categories, selectCategory, setSelectCategory }) => {
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
     setSelectCategory(selected === "All" ? "" : selected);
@@ -22,6 +22,6 @@ const Category = ({ categories, selectCategory, setSelectCategory }) => {
       </select>
     </div>
   );
-};
+});
 
 export default Category;

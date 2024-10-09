@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../common/commonFunctions";
@@ -7,7 +7,7 @@ import Loader from "./Loader";
 import "./AllQuestions.css";
 
 const AllQuestions = ({ questions }) => {
-  const { loggedInUser, deleteQuestion } = useContext(QuestionContext);
+  const {  deleteQuestion } = useContext(QuestionContext);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 3;
   const [showModal, setShowModal] = useState(false);
