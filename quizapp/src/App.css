@@ -1,19 +1,18 @@
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-} */
-
 .answer-icons {
   display: flex;
   gap: 1rem;
 }
 .star {
   font-size: 24px;
-  color: #ddd; /* Default star color */
+  color: #ddd;
 }
 
 .star.text-warning {
-  color: gold; /* Filled star color */
+  color: gold;
+}
+.no-questions-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

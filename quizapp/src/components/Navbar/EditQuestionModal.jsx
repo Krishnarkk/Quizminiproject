@@ -1,14 +1,20 @@
 import React, { useContext, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
+import Loader from "./Loader";
 
 const EditQuestionModal = ({ question, closeModal }) => {
   const { editQuestion } = useContext(QuestionContext);
   const [title, setTitle] = useState(question.title);
   const [category, setCategory] = useState(question.category);
+  const [loading, setLoading] = useState(false);
 
   const handleSave = () => {
-    editQuestion(question.id, title, category);
-    closeModal();
+    setLoading(true);
+    setTimeout(() => {
+      editQuestion(question.id, title, category);
+      setLoading(false);
+      closeModal();
+    }, 1000);
   };
 
   return (
@@ -24,46 +30,56 @@ const EditQuestionModal = ({ question, closeModal }) => {
             ></button>
           </div>
           <div className="modal-body">
-            <div className="mb-3">
-              <label htmlFor="questionTitle" className="form-label">
-                Title
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="questionTitle"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="questionCategory" className="form-label">
-                Category
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="questionCategory"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
-            </div>
+            {loading ? ( // Show Loader if loading is true
+              <Loader />
+            ) : (
+              <>
+                <div className="mb-3">
+                  <label htmlFor="questionTitle" className="form-label">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="questionTitle"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="questionCategory" className="form-label">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="questionCategory"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
           </div>
           <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={closeModal}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSave}
-            >
-              Save Changes
-            </button>
+            {!loading && ( // Hide buttons if loading
+              <>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSave}
+                >
+                  Save Changes
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

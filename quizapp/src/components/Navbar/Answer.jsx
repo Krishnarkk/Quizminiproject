@@ -1,191 +1,3 @@
-// // import React, { useState } from 'react'
-// // import { toast } from 'react-toastify';
-
-// // const Answer = ({questionId,addAnswer}) => {
-// //     const [answer,setAnswer]=useState("");
-// //     // const [userName,setUsername]=useState()
-// //     const handleSubmit=(e)=>{
-// //         e.preventDefault();
-// //         if(answer.trim()){
-// //             addAnswer(questionId,answer);
-// //             setAnswer("")
-// //         }
-// //         toast.success("Your answer is submitted",{
-// //             position:"top-center",
-// //             autoClose:3000
-// //         })
-// //     }
-// //   return (
-// //     <form onSubmit={handleSubmit} className='mt-3'>
-// //         <div className='input-group'>
-
-// //             <input
-// //                type='text'
-// //                className='form-control'
-// //                placeholder='Type your answer'
-// //                value={answer}
-// //                onChange={(e)=>setAnswer(e.target.value)}
-// //                required
-// //             />
-// //             <button type='submit' className='btn btn-primary'>Submit</button>
-// //         </div>
-
-// //     </form>
-// //   )
-// // }
-
-// // export default Answer
-
-// import React, { useState } from "react";
-// import { toast } from "react-toastify";
-// import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure Bootstrap icons are available
-
-// const Answer = ({
-//   questionId,
-//   addAnswer,
-//   updateAnswer,
-//   answers,
-//   answerIdx,
-// }) => {
-//   const [answer, setAnswer] = useState("");
-//   const [showModal, setShowModal] = useState(false); // State for controlling the modal
-//   const [editedAnswer, setEditedAnswer] = useState(
-//     answers[answerIdx]?.text || ""
-//   ); // State for the edited answer
-//   const [rating, setRating] = useState(answers[answerIdx]?.rating || 0); // State for the rating
-
-//   // Handle adding a new answer
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (answer.trim()) {
-//       addAnswer(questionId, {
-//         text: answer,
-//         rating: 0,
-//         answeredBy: "User",
-//         answeredAt: new Date().toISOString(),
-//       });
-//       setAnswer("");
-//       toast.success("Your answer has been submitted!", {
-//         position: "top-center",
-//         autoClose: 3000,
-//       });
-//     }
-//   };
-
-//   // Handle updating an answer (with rating)
-//   const handleUpdateSubmit = (e) => {
-//     e.preventDefault();
-//     if (editedAnswer.trim()) {
-//       const updatedAnswer = {
-//         text: editedAnswer,
-//         rating,
-//         answeredBy: "User",
-//         answeredAt: new Date().toISOString(),
-//       };
-//       updateAnswer(questionId, updatedAnswer, answerIdx);
-//       setShowModal(false); // Close modal
-//       toast.success("Your answer has been updated!", {
-//         position: "top-center",
-//         autoClose: 3000,
-//       });
-//     }
-//   };
-
-//   // Handle star rating click
-//   const handleStarClick = (index) => {
-//     setRating(index + 1); // Set the rating based on clicked star index
-//   };
-
-//   return (
-//     <div className="mt-3">
-//       {/* Form for adding a new answer */}
-//       <form onSubmit={handleSubmit}>
-//         <div className="input-group">
-//           <input
-//             type="text"
-//             className="form-control"
-//             placeholder="Type your answer"
-//             value={answer}
-//             onChange={(e) => setAnswer(e.target.value)}
-//             required
-//           />
-//           <button type="submit" className="btn btn-primary">
-//             Submit
-//           </button>
-//         </div>
-//       </form>
-
-//       {/* Button to trigger the modal for editing the answer */}
-
-//       <i className="bi bi-pencil" onClick={() => setShowModal(true)}></i>
-
-//       {/* Bootstrap Modal for editing the answer and rating */}
-//       <div
-//         className={`modal ${showModal ? "show" : ""}`}
-//         style={{ display: showModal ? "block" : "none" }}
-//       >
-//         <div className="modal-dialog">
-//           <div className="modal-content">
-//             <div className="modal-header">
-//               <h5 className="modal-title">Edit Answer</h5>
-//               <button
-//                 type="button"
-//                 className="btn-close"
-//                 onClick={() => setShowModal(false)} // Close modal
-//               ></button>
-//             </div>
-//             <div className="modal-body">
-//               <form onSubmit={handleUpdateSubmit}>
-//                 <div className="mb-3">
-//                   <label htmlFor="editedAnswer" className="form-label">
-//                     Answer
-//                   </label>
-//                   <input
-//                     type="text"
-//                     id="editedAnswer"
-//                     className="form-control"
-//                     value={editedAnswer}
-//                     onChange={(e) => setEditedAnswer(e.target.value)}
-//                     required
-//                   />
-//                 </div>
-
-//                 {/* Star rating system */}
-//                 <div className="mb-3">
-//                   <label className="form-label">Rating</label>
-//                   <div className="star-rating">
-//                     {[...Array(5)].map((star, index) => (
-//                       <i
-//                         key={index}
-//                         className={`bi ${
-//                           index < rating ? "bi-star-fill" : "bi-star"
-//                         }`} // Filled star for the current rating
-//                         style={{ cursor: "pointer", color: "#f39c12" }} // Styling for the stars
-//                         onClick={() => handleStarClick(index)} // Handle star click to set the rating
-//                       ></i>
-//                     ))}
-//                   </div>
-//                 </div>
-
-//                 <button type="submit" className="btn btn-primary">
-//                   Save Changes
-//                 </button>
-//               </form>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Modal backdrop */}
-//       {showModal && <div className="modal-backdrop fade show"></div>}
-//     </div>
-//   );
-// };
-
-// export default Answer;
-
-
-
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure Bootstrap icons are available
@@ -218,9 +30,9 @@ const Answer = ({ questionId, answers, addAnswer, updateAnswer }) => {
   // Handle opening the modal for editing an answer
   const handleEditClick = (answerIdx) => {
     setCurrentAnswerIdx(answerIdx);
-    setEditedAnswer(answers[answerIdx].text); // Load the existing answer text
-    setRating(answers[answerIdx].rating); // Load the existing rating
-    setShowModal(true); // Show modal
+    setEditedAnswer(answers[answerIdx].text);
+    setRating(answers[answerIdx].rating); 
+    setShowModal(true);
   };
 
   // Handle updating an answer (with rating)
@@ -233,8 +45,8 @@ const Answer = ({ questionId, answers, addAnswer, updateAnswer }) => {
         answeredBy: "User",
         answeredAt: new Date().toISOString(),
       };
-      updateAnswer(questionId, updatedAnswer, currentAnswerIdx); // Update the specific answer
-      setShowModal(false); // Close modal
+      updateAnswer(questionId, updatedAnswer, currentAnswerIdx);
+      setShowModal(false);
       toast.success("Your answer has been updated!", {
         position: "top-center",
         autoClose: 3000,
@@ -244,12 +56,11 @@ const Answer = ({ questionId, answers, addAnswer, updateAnswer }) => {
 
   // Handle star rating click
   const handleStarClick = (index) => {
-    setRating(index + 1); // Set the rating based on clicked star index
+    setRating(index + 1);
   };
 
   return (
     <div className="mt-3">
-      {/* Form for adding a new answer */}
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <input
@@ -279,7 +90,6 @@ const Answer = ({ questionId, answers, addAnswer, updateAnswer }) => {
                 <strong>Rating:</strong> {answerObj.rating} / 5
               </p>
             </div>
-            {/* Edit icon to open the modal */}
             <button
               className="btn btn-sm btn-outline-secondary"
               onClick={() => handleEditClick(index)}

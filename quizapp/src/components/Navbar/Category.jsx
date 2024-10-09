@@ -6,10 +6,7 @@ const Category = ({ categories, selectCategory, setSelectCategory }) => {
     setSelectCategory(selected === "All" ? "" : selected);
   };
   return (
-    <div className="mb-4">
-      <label htmlFor="categoryFilter" className="form-label">
-        Filter by category
-      </label>
+    <div className="mt-4">
       <select
         id="categoryFilter"
         className="form-select"

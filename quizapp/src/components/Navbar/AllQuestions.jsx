@@ -1,118 +1,126 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
-import { Link } from "react-router-dom"; // Import Link to navigate to new page
+import { Link } from "react-router-dom";
 import { formatDate } from "../../common/commonFunctions";
 import EditQuestionModal from "./EditQuestionModal";
+import Loader from "./Loader";
+import "./AllQuestions.css";
 
 const AllQuestions = ({ questions }) => {
-  const { loggedInUser, deleteQuestion } = useContext(QuestionContext); // Access deleteQuestion from context
-
-  // Pagination states
-  const [currentPage, setCurrentPage] = useState(1); // Current page state
-  const questionsPerPage = 3; // Number of questions per page
-
-  // Modal state for confirmation
-  const [showModal, setShowModal] = useState(false); // Control modal visibility
-  const [questionToDelete, setQuestionToDelete] = useState(null); // Store the question to be deleted
+  const { loggedInUser, deleteQuestion } = useContext(QuestionContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 3;
+  const [showModal, setShowModal] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [questionToEdit, setQuestionToEdit] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Calculate the index of the last question on the current page
+  //  the index of the last question on the current page
   const indexOfLastQuestion = currentPage * questionsPerPage;
-  // Calculate the index of the first question on the current page
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
-  // Get the current questions to display using slice
   const currentQuestions = questions?.slice(
     indexOfFirstQuestion,
     indexOfLastQuestion
   );
 
+  // Show loader when the component first loads
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
   // Calculate total pages
   const totalPages = Math.ceil(questions?.length / questionsPerPage);
-
-  // Function to handle changing pages
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (questions?.length === 0) {
     return (
-      <div className="d-flex justify-content-center align-items-center py-5">
+      <div className="d-flex justify-content-center align-items-center no-questions-container">
         <p className="text-muted fs-4">No questions are added ...!!</p>
       </div>
     );
   }
 
-  const latestQuestions = currentQuestions?.sort((a, b) => b.id - a.id); // Sort only the current page questions
+  const latestQuestions = currentQuestions?.sort((a, b) => b.id - a.id);
 
-  // Open modal and set the question to delete
   const handleDeleteClick = (questionId) => {
     setQuestionToDelete(questionId);
     setShowModal(true);
   };
 
-  // Confirm delete and trigger the deleteQuestion function
   const confirmDelete = () => {
-    deleteQuestion(questionToDelete);
-    setShowModal(false);
+    setLoading(true);
+    setTimeout(() => {
+      deleteQuestion(questionToDelete);
+      setLoading(false);
+      setShowModal(false);
+    }, 1000);
   };
 
   const handleEditClick = (question) => {
-    setQuestionToEdit(question);
-    setShowEditModal(true);
+    setLoading(true);
+    setTimeout(() => {
+      setQuestionToEdit(question);
+      setLoading(false);
+      setShowEditModal(true);
+    }, 600);
   };
 
   return (
     <div>
-      {/* Questions Display */}
-      {latestQuestions?.map((question, idx) => (
-        <div key={idx} className="card mb-3 shadow bg-white rounded">
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
-              <h6>
-                <span className="badge bg-secondary"> {question.category}</span>
-              </h6>
+      <div className="question-list">
+        {latestQuestions?.map((question, idx) => (
+          <div key={idx} className="card mb-3 shadow-lg question-card animate-fade-in">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center">
+                <h6>
+                  <span className="badge bg-secondary"> {question.category}</span>
+                </h6>
 
-              {/* Align Edit and Delete Icons */}
-              <div className="d-flex align-items-center">
-                <i
-                  className="bi bi-pencil-fill"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleEditClick(question)}
-                ></i>
-                {/* Adding space between icons using margin-start (ms-2) */}
-                <i
-                  className="bi bi-trash ms-2"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleDeleteClick(question.id)} // Set the question to be deleted
-                ></i>
+                <div className="d-flex align-items-center">
+                  <i
+                    className="bi bi-pencil-fill edit-icon"
+                    onClick={() => handleEditClick(question)}
+                  ></i>
+                  <i
+                    className="bi bi-trash ms-2 delete-icon"
+                    onClick={() => handleDeleteClick(question.id)}
+                  ></i>
+                </div>
+              </div>
+              <h5 className="card-title text-danger question-title">{question.title}?</h5>
+              <p className="card-text">Answer:</p>
+              <ul>
+                {question.answers.length > 0 ? (
+                  <li className="text-success">{question?.answers[0].text}</li>
+                ) : (
+                  <p>No answers yet.</p>
+                )}
+              </ul>
+
+              <Link to={`/add-answer/${question.id}`}>
+                <button className="btn btn-primary custom-btn">
+                  Click to Add Your Answer
+                </button>
+              </Link>
+
+              <div className="d-flex justify-content-between mt-4">
+                <h5 className="text-truncate mb-0 small">
+                  Posted By: {question?.postedBy || "John"}
+                </h5>
+                <h6 className="text-muted small">{formatDate(question.id)}</h6>
               </div>
             </div>
-            <h5 className="card-title text-danger">{question.title}?</h5>
-            <p className="card-text">Answer:</p>
-            <ul>
-              {question.answers.length > 0 ? (
-                // Show only the first answer
-                <li className="text-success">{question?.answers[0].text}</li>
-              ) : (
-                <p>No answers yet.</p>
-              )}
-            </ul>
-
-            {/* Add answer button which navigates to a new page */}
-            <Link to={`/add-answer/${question.id}`}>
-              <button className="btn btn-primary">
-                Click to Add Your Answer
-              </button>
-            </Link>
-
-            <div className="d-flex justify-content-between mt-4">
-              <h5 className="text-truncate mb-0 small">
-                Posted By: {question?.postedBy || "John"}
-              </h5>
-              <h6 className="text-muted small">{formatDate(question.id)}</h6>
-            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {/* Pagination Controls */}
       <nav>
@@ -127,13 +135,10 @@ const AllQuestions = ({ questions }) => {
             </button>
           </li>
 
-          {/* Page numbers */}
           {Array.from({ length: totalPages }, (_, index) => (
             <li
               key={index + 1}
-              className={`page-item ${
-                currentPage === index + 1 ? "active" : ""
-              }`}
+              className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
             >
               <button onClick={() => paginate(index + 1)} className="page-link">
                 {index + 1}
@@ -142,9 +147,7 @@ const AllQuestions = ({ questions }) => {
           ))}
 
           <li
-            className={`page-item ${
-              currentPage === totalPages ? "disabled" : ""
-            }`}
+            className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
           >
             <button
               className="page-link"
@@ -156,15 +159,16 @@ const AllQuestions = ({ questions }) => {
           </li>
         </ul>
       </nav>
+
       {showEditModal && (
         <EditQuestionModal
           question={questionToEdit}
           closeModal={() => setShowEditModal(false)}
         />
       )}
-      {/* Modal for delete confirmation */}
+
       {showModal && (
-        <div className="modal show d-block" tabIndex="-1">
+        <div className="modal show d-block animate-fade-in" tabIndex="-1">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -172,7 +176,7 @@ const AllQuestions = ({ questions }) => {
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowModal(false)} // Close modal on cancel
+                  onClick={() => setShowModal(false)}
                 ></button>
               </div>
               <div className="modal-body">
@@ -182,14 +186,14 @@ const AllQuestions = ({ questions }) => {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setShowModal(false)} // Close modal on cancel
+                  onClick={() => setShowModal(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={confirmDelete} // Call confirm delete function
+                  onClick={confirmDelete}
                 >
                   Delete
                 </button>
