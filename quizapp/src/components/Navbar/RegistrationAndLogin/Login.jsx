@@ -18,7 +18,7 @@ const Login = () => {
       const response = await login(username, password);
       if (response.success) {
         toast.success("Login successful");
-        navigate("/add-question");
+        navigate("/");
       } else {
         toast.error(response.message || "Login failed");
       }
@@ -62,7 +62,7 @@ const Login = () => {
             className="btn btn-primary w-100"
             disabled={loading}
           >
-            {loading && <Loader />}
+            Login
           </button>
         </form>
         <div className="mt-3 text-center">
