@@ -1,25 +1,28 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formatDate } from "../../common/commonFunctions";
 import EditQuestionModal from "./EditQuestionModal";
 import Loader from "./Loader";
 import "./AllQuestions.css";
+import { toast } from "react-toastify";
+
 
 const AllQuestions = ({ questions }) => {
-  const {  deleteQuestion } = useContext(QuestionContext);
+  const {  deleteQuestion,loggedInUser} = useContext(QuestionContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 3;
+  const questionsPerPage = 5;
   const [showModal, setShowModal] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [questionToEdit, setQuestionToEdit] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const sortedQuestions = [...questions].sort((a, b) => b.id - a.id);
+  const navigate=useNavigate();
   //  the index of the last question on the current page
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
-  const currentQuestions = questions?.slice(
+  const currentQuestions = sortedQuestions?.slice(
     indexOfFirstQuestion,
     indexOfLastQuestion
   );
@@ -33,14 +36,14 @@ const AllQuestions = ({ questions }) => {
   }, []);
 
   // Calculate total pages
-  const totalPages = Math.ceil(questions?.length / questionsPerPage);
+  const totalPages = Math.ceil(sortedQuestions?.length / questionsPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return <Loader />;
   }
 
-  if (questions?.length === 0) {
+  if (sortedQuestions?.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center no-questions-container">
         <p className="text-muted fs-4">No questions are added ...!!</p>
@@ -48,7 +51,6 @@ const AllQuestions = ({ questions }) => {
     );
   }
 
-  const latestQuestions = currentQuestions?.sort((a, b) => b.id - a.id);
 
   const handleDeleteClick = (questionId) => {
     setQuestionToDelete(questionId);
@@ -72,11 +74,22 @@ const AllQuestions = ({ questions }) => {
       setShowEditModal(true);
     }, 600);
   };
+  
+  const handleAnswerNavigation=(qId)=>{
+    if (!loggedInUser?.username) {
+      toast.warning("Please login to add your answer");
+      setTimeout(()=>{
+        navigate("/login")
+      },300)
+      return;
+    }
+    return navigate(`/add-answer/${qId}`);
+  }
 
   return (
     <div>
       <div className="question-list">
-        {latestQuestions?.map((question, idx) => (
+        {currentQuestions?.map((question, idx) => (
           <div key={idx} className="card mb-3 shadow-lg question-card animate-fade-in">
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center">
@@ -105,11 +118,11 @@ const AllQuestions = ({ questions }) => {
                 )}
               </ul>
 
-              <Link to={`/add-answer/${question.id}`}>
-                <button className="btn btn-primary custom-btn">
+              {/* <Link to={`/add-answer/${question.id}`}> */}
+                <button className="btn btn-primary custom-btn" onClick={()=>handleAnswerNavigation(question.id)}>
                   Click to Add Your Answer
                 </button>
-              </Link>
+              {/* </Link> */}
 
               <div className="d-flex justify-content-between mt-4">
                 <h5 className="text-truncate mb-0 small">

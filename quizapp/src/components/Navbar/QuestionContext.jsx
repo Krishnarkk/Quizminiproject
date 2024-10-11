@@ -139,6 +139,18 @@ const QuestionProvider = ({ children }) => {
     localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
   },[questions]);
 
+  const deleteAnswer = useCallback((questionId, answerIdx) => {
+    const updatedQuestions = questions.map((question) => {
+      if (question.id === questionId) {
+        const updatedAnswers = question.answers.filter((_, idx) => idx !== answerIdx);
+        return { ...question, answers: updatedAnswers };
+      }
+      return question;
+    });
+  
+    setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions));
+  }, [questions]);
   // Function to rate an answer
   const rateAnswer = useCallback((questionId, answerIdx, newRating) => {
     setQuestions((prevQuestions) =>
@@ -208,6 +220,7 @@ const QuestionProvider = ({ children }) => {
       rateAnswer,
       deleteQuestion,
       editQuestion,
+      deleteAnswer,
       loggedInUser,
     }
   },[questions,
@@ -221,8 +234,9 @@ const QuestionProvider = ({ children }) => {
     rateAnswer,
     deleteQuestion,
     editQuestion,
+    deleteAnswer,
     loggedInUser,])
-    
+
   return (
     <>
       <QuestionContext.Provider

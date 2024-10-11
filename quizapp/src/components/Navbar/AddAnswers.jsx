@@ -6,14 +6,22 @@ import StarRating from "./StarRating";
 
 const AddAnswers = () => {
   const { questionId } = useParams();
-  const { questions, addAnswer, rateAnswer, updateAnswer, loggedInUser } =
-    useContext(QuestionContext);
+  const {
+    questions,
+    addAnswer,
+    rateAnswer,
+    updateAnswer,
+    deleteAnswer,
+    loggedInUser,
+  } = useContext(QuestionContext);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [newAnswer, setNewAnswer] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editAnswerText, setEditAnswerText] = useState("");
   const [editAnswerRating, setEditAnswerRating] = useState(0);
   const [currentAnswerIndex, setCurrentAnswerIndex] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [answerToDeleteIndex, setAnswerToDeleteIndex] = useState(null);
 
   useEffect(() => {
     const question = questions.find((q) => q.id === parseInt(questionId));
@@ -68,45 +76,65 @@ const AddAnswers = () => {
     }
   };
 
+  const confirmDeleteAnswer = (index) => {
+    setAnswerToDeleteIndex(index);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteAnswer = () => {
+    if (answerToDeleteIndex !== null) {
+      deleteAnswer(currentQuestion.id, answerToDeleteIndex);
+      toast.success("Answer deleted successfully!", { autoClose: 2000 });
+    }
+    setShowDeleteModal(false);
+  };
+
   if (!currentQuestion) {
     return <p>Loading question...</p>;
   }
 
   return (
     <div className="container">
-      <h2 className="mt-4">{currentQuestion.title}</h2>
-      <h5 className="text-muted">{currentQuestion.category}</h5>
+      <h2 className="mt-4 text-danger">{currentQuestion.title}?</h2>
+      <h5 className="badge bg-secondary">{currentQuestion.category}</h5>
       <p>Answers:</p>
-      <ul>
+      <div className="answers-list mb-4">
         {currentQuestion.answers.length > 0 ? (
           currentQuestion.answers.map((answer, index) => (
-            <li key={index} className="mb-2">
-              <p>
-                {answer.text} -{" "}
-                <span className="text-muted small">
-                  Answered by <b>{answer.answeredBy.toUpperCase()}</b> on{" "}
-                  {new Date(answer.answeredAt).toLocaleString()}
+            <div key={index} className="mb-3 p-1 border-bottom">
+              <div className="mb-1">
+                <span className="answered-by">
+                  <span className="text-muted">
+                    Answered by {answer.answeredBy.toUpperCase()} on{" "}
+                    {new Date(answer.answeredAt).toLocaleString()}
+                  </span>
                 </span>
-              </p>
-              <div>
-                Rating:{" "}
+              </div>
+              <div className="answer-text">
+                <p>{answer.text}</p>
+              </div>
+              <div className="answer-actions d-flex justify-content-between align-items-center">
                 <StarRating
                   value={answer.rating}
                   setRating={(rating) => handleRating(index, rating)}
                 />
+                <div>
+                  <i
+                    className="bi bi-pencil-fill edit-icon ms-2"
+                    onClick={() => openEditModal(answer, index)}
+                  ></i>
+                  <i
+                    className="bi bi-trash ms-2 delete-icon"
+                    onClick={() => confirmDeleteAnswer(index)}
+                  ></i>
+                </div>
               </div>
-              <button
-                className="btn btn-secondary btn-sm mt-1"
-                onClick={() => openEditModal(answer, index)}
-              >
-                Edit
-              </button>
-            </li>
+            </div>
           ))
         ) : (
           <p>No answers yet.</p>
         )}
-      </ul>
+      </div>
 
       <div className="mt-4">
         <h5>Add Your Answer:</h5>
@@ -115,13 +143,15 @@ const AddAnswers = () => {
           value={newAnswer}
           onChange={(e) => setNewAnswer(e.target.value)}
           placeholder="Write your answer here"
+          rows={8}
+          colums={50}
         />
         <button className="btn btn-primary mt-2" onClick={handleAnswerSubmit}>
           Submit Answer
         </button>
       </div>
 
-      {/* Modal for editing answer */}
+      {/* Edit Answer Modal */}
       <div
         className={`modal ${showModal ? "show" : ""}`}
         style={{ display: showModal ? "block" : "none" }}
@@ -172,8 +202,46 @@ const AddAnswers = () => {
         </div>
       </div>
 
-     
-      {showModal && <div className="modal-backdrop fade show"></div>}
+      {/* Confirmation Modal for Deleting Answer */}
+      <div
+        className={`modal ${showDeleteModal ? "show" : ""}`}
+        style={{ display: showDeleteModal ? "block" : "none" }}
+        tabIndex="-1"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Deletion</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setShowDeleteModal(false)}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <p>Are you sure you want to delete this answer?</p>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleDeleteAnswer}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showDeleteModal && <div className="modal-backdrop fade show"></div>}
     </div>
   );
 };

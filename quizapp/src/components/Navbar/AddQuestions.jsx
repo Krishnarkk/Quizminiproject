@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const AddQuestions = React.memo(() => {
@@ -10,13 +11,19 @@ const AddQuestions = React.memo(() => {
   const [otherCategory, setOtherCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const updatedCategory = useMemo(() => {
     return category === "Other" ? otherCategory : category;
   }, [category, otherCategory]);
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!loggedInUser?.username) {
+      toast.warning("Please login to add your question");
+      setTimeout(() => {
+        navigate("/login");
+      }, 300);
+      return;
+    }
     setLoading(true);
     const newQuestion = {
       id: Date.now(),
@@ -25,12 +32,9 @@ const AddQuestions = React.memo(() => {
       answers: [],
       postedBy: loggedInUser?.username || "",
     };
-
-    setTimeout(() => {
-      addNewQuestion(newQuestion);
-      setLoading(false);
-      navigate("/");
-    }, 1000);
+    addNewQuestion(newQuestion);
+    setLoading(false);
+    navigate("/");
   };
 
   const handleCategoryChange = (e) => {
@@ -40,6 +44,9 @@ const AddQuestions = React.memo(() => {
   return (
     <div className="container">
       {loading && <Loader />}
+      <h2 className="text-danger text-center mt-3 title animate-slide-fade mt-3">
+        Post your Questions
+      </h2>
       <form onSubmit={handleSubmit} className="mb-4 mt-4">
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
