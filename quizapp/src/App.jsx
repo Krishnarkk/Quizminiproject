@@ -11,9 +11,10 @@ import Footer from "./components/Navbar/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-
+import Cursor from "./Cursor";
 const App = () => {
   return (
+    <>
     <QuestionProvider>
       <Router>
         <div className="container-wrapper">
@@ -32,6 +33,8 @@ const App = () => {
       </Router>
       <ToastContainer position="top-center" autoClose={3000} />
     </QuestionProvider>
+    <Cursor/>
+    </>
   );
 };
 

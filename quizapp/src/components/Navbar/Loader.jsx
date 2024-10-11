@@ -1,12 +1,13 @@
 import React from "react";
-import "./Loader.css"; // Import the CSS file for animation
+import "./Loader.css"; 
 
 const Loader = () => {
   return (
-    <div className="loader-container">
-      <div className="loader"></div>
-      <p className="loader-text">Loading...</p>
-    </div>
+    <div class="d-flex justify-content-center loader-container">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
   );
 };
 
