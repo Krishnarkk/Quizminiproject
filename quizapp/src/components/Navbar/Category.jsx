@@ -6,7 +6,7 @@ const Category = React.memo(({ categories, selectCategory, setSelectCategory }) 
     setSelectCategory(selected === "All" ? "" : selected);
   };
   return (
-    <div className="mt-4">
+    <div className="mt-3">
       <select
         id="categoryFilter"
         className="form-select"

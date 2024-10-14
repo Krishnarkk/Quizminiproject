@@ -18,7 +18,7 @@ const Signup = () => {
     const response = signUp(username, password);
     if (response.success) {
       toast.success("Signup successful");
-      navigate("/add-question");
+      navigate("/");
     } else {
       toast.error(response.message || "Signup failed");
     }

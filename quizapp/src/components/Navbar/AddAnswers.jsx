@@ -105,7 +105,7 @@ const AddAnswers = () => {
               <div className="mb-1">
                 <span className="answered-by">
                   <span className="text-muted">
-                    Answered by {answer.answeredBy.toUpperCase()} on{" "}
+                  <i class="bi bi-person-circle"></i> {answer.answeredBy.toUpperCase()} on
                     {new Date(answer.answeredAt).toLocaleString()}
                   </span>
                 </span>
