@@ -23,7 +23,7 @@ const defaultQuestion = [
 const QuestionProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
-
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   // Load questions and the logged-in user from local storage on initial load
   useEffect(() => {
     const storedQuestions = localStorage.getItem("questions");
@@ -207,6 +207,17 @@ const QuestionProvider = ({ children }) => {
     localStorage.removeItem("currentUser"); // Remove user from local storage
   },[]);
 
+  // toggle themes
+  const toggleTheme = useCallback(() => {
+    setIsDarkTheme((prev) => {
+      const newTheme = !prev;
+      document.body.classList.toggle('dark-theme', newTheme);
+      return newTheme;
+    });
+    
+  }, []);
+
+
   const contextValue=useMemo(()=>{
     return {
       questions,
@@ -221,6 +232,8 @@ const QuestionProvider = ({ children }) => {
       deleteQuestion,
       editQuestion,
       deleteAnswer,
+      toggleTheme,
+      isDarkTheme,
       loggedInUser,
     }
   },[questions,
@@ -235,7 +248,9 @@ const QuestionProvider = ({ children }) => {
     deleteQuestion,
     editQuestion,
     deleteAnswer,
-    loggedInUser,])
+    toggleTheme,
+    isDarkTheme,
+    loggedInUser])
 
   return (
     <>

@@ -19,12 +19,12 @@
 }
 
 .answers-list {
-  border-radius: 5px;  
+  border-radius: 5px;
 }
 
 .answered-by {
-  font-weight: bold;    
-  font-size: 12px; 
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .add-question-btn {
@@ -40,7 +40,7 @@
     background: #167fff;
     color: #eedbdb;
     font-size: 24px;
-    line-height: 50px; 
+    line-height: 50px;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -49,4 +49,28 @@
     right: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
+}
+
+/* for darktheme */
+
+.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+.white-theme {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+.moon-icon{
+  color: #121212;
+}
+.sun-icon{
+  color: #ffffff !important;
+}
+
+@media (max-width:768px) {
+.logo-img{
+  width: 30vw !important;
+}  
 }

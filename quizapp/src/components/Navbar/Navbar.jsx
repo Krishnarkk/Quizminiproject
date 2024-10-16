@@ -2,28 +2,32 @@ import React, { useContext } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { QuestionContext } from "./QuestionContext";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../../assets/mirafra-logo.svg";
 
 const Navbar = () => {
-  const { loggedInUser, logout } = useContext(QuestionContext);
+  const { loggedInUser, logout, toggleTheme, isDarkTheme } =
+    useContext(QuestionContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); 
+    logout();
     navigate("/login");
   };
 
   return (
     <nav
-      className="navbar navbar-expand-lg navbar-light sticky-top"
-      style={{ backgroundColor: "#e3f2fd" }}
+      className={`navbar navbar-expand-lg sticky-top ${
+        isDarkTheme ? "navbar-dark bg-dark" : "navbar-light"
+      }`}
+      style={
+        isDarkTheme
+          ? { backgroundColor: "#343a40" }
+          : { backgroundColor: "#e3f2fd" }
+      }
     >
       <div className="container-fluid">
-        <Link
-          className="navbar-brand"
-          to="/"
-          style={{ color: "green", fontWeight: "bolder" }}
-        >
-          Mirafra Technologies
+        <Link className="navbar-brand" to="/">
+          <img src={logo} style={{ width: "10vw" }} alt="Logo" className="logo-img" />
         </Link>
         <button
           className="navbar-toggler"
@@ -69,26 +73,47 @@ const Navbar = () => {
               </>
             )}
           </ul>
-          {loggedInUser && (
-            <ul className="navbar-nav ms-auto">
-              {/* User Info and Dropdown */}
+          <ul className="navbar-nav ms-auto d-flex align-items-center">
+            <li className="nav-item">
+              <button
+                className="btn btn-outline me-2 d-flex align-items-center"
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+              >
+                {isDarkTheme ? (
+                  <i
+                    className="bi bi-sun-fill sun-icon"
+                    style={{ fontSize: "1.2rem" }}
+                  ></i>
+                ) : (
+                  <i
+                    className="bi bi-moon-fill moon-icon"
+                    style={{ fontSize: "1.2rem" }}
+                  ></i>
+                )}
+              </button>
+            </li>
+            {loggedInUser && (
               <li className="nav-item dropdown">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle d-flex align-items-center"
                   href="#"
                   id="navbarDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                 <i class="bi bi-person-circle"></i> {loggedInUser.username.toUpperCase() || loggedInUser.email}
+                  <i
+                    className="bi bi-person-circle me-2"
+                    style={{ fontSize: "1.5rem" }}
+                  ></i>
+                  {loggedInUser.username.toUpperCase() || loggedInUser.email}
                 </a>
                 <ul
                   className="dropdown-menu dropdown-menu-end"
                   aria-labelledby="navbarDropdown"
-                  style={{ borderRadius: "8px" }} // Keep the dropdown white and clean
+                  style={{ borderRadius: "8px" }}
                 >
-                  {/* Display user's name inside the box */}
                   <li className="px-3 py-2">
                     <strong>
                       {loggedInUser.username || loggedInUser.email}
@@ -97,7 +122,7 @@ const Navbar = () => {
                   <hr className="dropdown-divider" />
                   <li className="text-center">
                     <button
-                      className="btn btn-danger w-100" // Full-width red logout button
+                      className="btn btn-danger w-100"
                       onClick={handleLogout}
                     >
                       Logout
@@ -105,8 +130,8 @@ const Navbar = () => {
                   </li>
                 </ul>
               </li>
-            </ul>
-          )}
+            )}
+          </ul>
         </div>
       </div>
     </nav>

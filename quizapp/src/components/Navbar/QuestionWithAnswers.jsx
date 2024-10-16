@@ -10,7 +10,6 @@ const QuestionWithAnswers = () => {
   const { questions, addAnswer } = useContext(QuestionContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  // console.log(questions.map(elm=>elm.category))
   const categories = [...new Set(questions.map(elm=>elm.category))];
   const debouncedSearchTerm = useDebounce(searchTerm, 400);
   const navigate = useNavigate();

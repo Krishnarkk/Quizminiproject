@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { QuestionContext } from "./QuestionContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,6 +6,7 @@ import StarRating from "./StarRating";
 
 const AddAnswers = () => {
   const { questionId } = useParams();
+  const {isDarkTheme}=useContext(QuestionContext)
   const {
     questions,
     addAnswer,
@@ -104,7 +105,7 @@ const AddAnswers = () => {
             <div key={index} className="mb-3 p-1 border-bottom">
               <div className="mb-1">
                 <span className="answered-by">
-                  <span className="text-muted">
+                  <span className={isDarkTheme?"text-secondary":"text-muted"}>
                   <i class="bi bi-person-circle"></i> {answer.answeredBy.toUpperCase()} on
                     {new Date(answer.answeredAt).toLocaleString()}
                   </span>

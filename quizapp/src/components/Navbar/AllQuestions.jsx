@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { formatDate } from "../../common/commonFunctions";
 import EditQuestionModal from "./EditQuestionModal";
 import Loader from "./Loader";
 import "./AllQuestions.css";
 import { toast } from "react-toastify";
 
-
 const AllQuestions = ({ questions }) => {
-  const {  deleteQuestion,loggedInUser} = useContext(QuestionContext);
+  const { deleteQuestion, loggedInUser } =
+    useContext(QuestionContext);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 5;
   const [showModal, setShowModal] = useState(false);
@@ -90,11 +90,17 @@ const AllQuestions = ({ questions }) => {
     <div>
       <div className="question-list">
         {currentQuestions?.map((question, idx) => (
-          <div key={idx} className="card mb-3 shadow-lg question-card animate-fade-in">
+          <div
+            key={idx}
+            className="card mb-3 shadow-lg question-card animate-fade-in"
+          >
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center">
                 <h6>
-                  <span className="badge bg-secondary"> {question.category}</span>
+                  <span className="badge bg-secondary">
+                    {" "}
+                    {question.category}
+                  </span>
                 </h6>
 
                 <div className="d-flex align-items-center">
@@ -108,7 +114,9 @@ const AllQuestions = ({ questions }) => {
                   ></i>
                 </div>
               </div>
-              <h5 className="card-title text-danger question-title">{question.title}?</h5>
+              <h5 className="card-title text-danger question-title">
+                {question.title}?
+              </h5>
               <p className="card-text">Answer:</p>
               <ul>
                 {question.answers.length > 0 ? (
@@ -118,10 +126,12 @@ const AllQuestions = ({ questions }) => {
                 )}
               </ul>
 
-              {/* <Link to={`/add-answer/${question.id}`}> */}
-                <button className="btn btn-primary custom-btn" onClick={()=>handleAnswerNavigation(question.id)}>
-                  Click to Add Your Answer
-                </button>
+              <button
+                className="btn btn-primary custom-btn"
+                onClick={() => handleAnswerNavigation(question.id)}
+              >
+                Click to Add Your Answer
+              </button>
               {/* </Link> */}
 
               <div className="d-flex justify-content-between mt-4">
@@ -151,7 +161,9 @@ const AllQuestions = ({ questions }) => {
           {Array.from({ length: totalPages }, (_, index) => (
             <li
               key={index + 1}
-              className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+              className={`page-item ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
             >
               <button onClick={() => paginate(index + 1)} className="page-link">
                 {index + 1}
@@ -160,7 +172,9 @@ const AllQuestions = ({ questions }) => {
           ))}
 
           <li
-            className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
           >
             <button
               className="page-link"
@@ -219,4 +233,4 @@ const AllQuestions = ({ questions }) => {
   );
 };
 
-export default AllQuestions;
+export default React.memo(AllQuestions);
