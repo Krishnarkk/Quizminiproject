@@ -97,6 +97,7 @@ const AddQuestions = React.memo(() => {
             value={otherCategory}
             onChange={(e) => setOtherCategory(e.target.value)}
             placeholder="Enter your question category"
+            required
           />
         )}
         <button

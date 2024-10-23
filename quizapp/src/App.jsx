@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Cursor from "./Cursor";
+import LandingPage from "./components/Navbar/LandingPage";
 const App = () => {
   return (
     <>
@@ -21,7 +22,8 @@ const App = () => {
           <Navbar />
           <div className="content flex-grow-1">
             <Routes>
-              <Route path="/" element={<QuestionWithAnswers />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/question-answers" element={<QuestionWithAnswers />} />
               <Route path="/add-question" element={<AddQuestions />} />
               <Route path="/add-answer/:questionId" element={<AddAnswers />} />
               <Route path="/login" element={<Login />} />

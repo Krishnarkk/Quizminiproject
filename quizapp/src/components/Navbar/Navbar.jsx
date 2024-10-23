@@ -46,7 +46,7 @@ const Navbar = () => {
               <>
                 <li className="nav-item">
                   <Link className="nav-link active" aria-current="page" to="/">
-                    Questions and Answers
+                   Home
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -116,7 +116,7 @@ const Navbar = () => {
                 >
                   <li className="px-3 py-2">
                     <strong>
-                      {loggedInUser.username || loggedInUser.email}
+                      {loggedInUser.email}
                     </strong>
                   </li>
                   <hr className="dropdown-divider" />

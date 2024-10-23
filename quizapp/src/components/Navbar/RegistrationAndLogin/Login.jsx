@@ -33,7 +33,7 @@ const Login = () => {
     <div className="container d-flex align-items-center justify-content-center min-vh-100">
       <div className="col-md-4">
         {loading && <Loader />}
-        <h3 className="text-center">Login</h3>
+        <h3 className="text-center title animate-slide-fade">Login</h3>
         <form onSubmit={handleLogin} className="shadow p-4 rounded bg-light">
           <div className="mb-3">
             <label className="form-label">Username</label>
@@ -67,7 +67,7 @@ const Login = () => {
         </form>
         <div className="mt-3 text-center">
           <p>
-            Don't have an account?
+            Don't have an account? &nbsp;
             <a href="/signup" className="text-primary">
               Sign up here
             </a>

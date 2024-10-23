@@ -170,20 +170,22 @@ const QuestionProvider = ({ children }) => {
   },[]);
 
   // Signup function to register a new user
-  const signUp = useCallback((username, password) => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const userExists = users.some((user) => user.username === username);
+ // Signup function to register a new user
+const signUp = useCallback((username, password, email) => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const userExists = users.some((user) => user.username === username || user.email === email);
 
-    if (!userExists) {
-      const newUser = { username, password };
-      const updatedUsers = [...users, newUser];
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-      setLoggedInUser(newUser);
-      return { success: true };
-    } else {
-      return { success: false, message: "User already exists" };
-    }
-  },[]);
+  if (!userExists) {
+    const newUser = { username, password, email };
+    const updatedUsers = [...users, newUser];
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    setLoggedInUser(newUser);
+    return { success: true };
+  } else {
+    return { success: false, message: "User already exists with this username or email" };
+  }
+}, []);
+
 
   // Login function to authenticate a user
   const login = useCallback((username, password) => {

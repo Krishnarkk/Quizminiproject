@@ -1,0 +1,77 @@
+.landing-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; 
+    overflow: hidden;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+.landing-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    animation: zoom 1.5s ease-in-out;
+}
+
+@keyframes zoom {
+    0% {
+        opacity: 0;
+        transform: scale(2.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(3, 49, 15, 0.4); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center; 
+}
+
+.explore-button {
+    font-size: 1.5rem; 
+    padding: 10px 20px; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    background-color: #007bff;
+    transition: transform 0.2s ease, background-color 0.2s ease; 
+}
+
+.explore-button:hover {
+    transform: scale(1.05); 
+    background-color: #0056b3;
+}
+
+.explore-button:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .explore-button {
+        font-size: 1.2rem; 
+        padding: 8px 16px; 
+    }
+
+    .overlay {
+        padding: 15px; 
+    }
+    .landing-image {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+    }
+}
