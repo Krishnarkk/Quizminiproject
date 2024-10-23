@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 
 const Login = () => {
-  const { login } = useContext(QuestionContext);
+  const { login, isDarkTheme } = useContext(QuestionContext); // Access darkMode from context
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+console.log(isDarkTheme)
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -30,13 +30,13 @@ const Login = () => {
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+    <div className={`container d-flex align-items-center justify-content-center min-vh-100`}>
       <div className="col-md-4">
         {loading && <Loader />}
         <h3 className="text-center title animate-slide-fade">Login</h3>
-        <form onSubmit={handleLogin} className="shadow p-4 rounded bg-light">
+        <form onSubmit={handleLogin} className={`shadow p-4 rounded ${isDarkTheme ? 'bg-secondary' : 'bg-light'}`}>
           <div className="mb-3">
-            <label className="form-label">Username</label>
+            <label className={`form-label`}>Username</label>
             <input
               type="text"
               placeholder="Enter your username"

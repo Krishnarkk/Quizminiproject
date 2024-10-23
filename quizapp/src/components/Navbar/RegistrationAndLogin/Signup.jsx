@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const { signUp } = useContext(QuestionContext);
+  const { signUp, isDarkTheme } = useContext(QuestionContext); // Access isDarkTheme from context
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -36,15 +36,15 @@ const Signup = () => {
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center min-vh-100">
+    <div className={`container d-flex align-items-center justify-content-center min-vh-100`}>
       <div className="col-md-4">
         <h3 className="text-center title animate-slide-fade">Signup</h3>
-        <form onSubmit={handleSignup} className="shadow p-4 rounded bg-light">
+        <form onSubmit={handleSignup} className={`shadow p-4 rounded ${isDarkTheme ? 'bg-secondary text-white' : 'bg-light'}`}>
           <div className="mb-3">
             <label className="form-label">Email</label>
             <input
               type="email"
-              placeholder="enter your email"
+              placeholder="Enter your email"
               className="form-control"
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -54,7 +54,7 @@ const Signup = () => {
             <label className="form-label">Username</label>
             <input
               type="text"
-              placeholder="enter your username"
+              placeholder="Enter your username"
               className="form-control"
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -64,7 +64,7 @@ const Signup = () => {
             <label className="form-label">Password</label>
             <input
               type="password"
-              placeholder="enter your password"
+              placeholder="Enter your password"
               className="form-control"
               onChange={(e) => setPassword(e.target.value)}
               required
