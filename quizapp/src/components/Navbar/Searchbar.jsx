@@ -5,10 +5,11 @@ const Searchbar = React.memo(({ setSearchTerm }) => {
     <div className="mt-3">
       <div className="input-group">
         <input
-          type="text"
+          type="search"
           className="form-control"
           placeholder="Search questions or answers...."
           onChange={(e) => setSearchTerm(e.target.value)}
+          style={{cursor:"pointer"}}
         />
         <span
           className="input-group-text bg-white"

@@ -34,7 +34,7 @@ const AddQuestions = React.memo(() => {
     };
     addNewQuestion(newQuestion);
     setLoading(false);
-    navigate("/");
+    navigate("/question-answers");
   };
 
   const handleCategoryChange = (e) => {
