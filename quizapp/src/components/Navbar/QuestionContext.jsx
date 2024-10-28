@@ -28,7 +28,7 @@ const QuestionProvider = ({ children }) => {
   useEffect(() => {
     const storedQuestions = localStorage.getItem("questions");
     const storedUser = localStorage.getItem("currentUser");
-
+    const storedTheme = localStorage.getItem("isDarkTheme");
     // Check if questions exist in local storage
     if (storedQuestions) {
       try {
@@ -55,6 +55,10 @@ const QuestionProvider = ({ children }) => {
         console.error("Error while parsing user data:", err);
         setLoggedInUser(null); // Clear user if there's an error parsing
       }
+    }
+    if (storedTheme === "true") {
+      setIsDarkTheme(true);
+      document.body.classList.add('dark-theme');
     }
   }, []);
 
@@ -169,7 +173,6 @@ const QuestionProvider = ({ children }) => {
     );
   },[]);
 
-  // Signup function to register a new user
  // Signup function to register a new user
 const signUp = useCallback((username, password, email) => {
   const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -214,9 +217,9 @@ const signUp = useCallback((username, password, email) => {
     setIsDarkTheme((prev) => {
       const newTheme = !prev;
       document.body.classList.toggle('dark-theme', newTheme);
+      localStorage.setItem("isDarkTheme", newTheme); // Save to local storage
       return newTheme;
     });
-    
   }, []);
 
 

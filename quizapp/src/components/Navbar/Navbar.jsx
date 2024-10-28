@@ -3,6 +3,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { QuestionContext } from "./QuestionContext";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/mirafra-logo.svg";
+import "./Navbar.css"; // Import CSS file for additional styles
 
 const Navbar = () => {
   const { loggedInUser, logout, toggleTheme, isDarkTheme } =
@@ -45,28 +46,36 @@ const Navbar = () => {
             {loggedInUser ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link active" aria-current="page" to="/">
-                   Home
+                  <Link className="nav-link animated-link" aria-current="page" to="/">
+                    Home
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link
-                    className="nav-link text-danger fw-bolder"
+                    className="nav-link text-success fw-bolder animated-link"
+                    to="/question-answers"
+                  >
+                    Browse Questions
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link text-danger fw-bolder animated-link"
                     to="/add-question"
                   >
-                    Add Questions
+                    Post  Questions
                   </Link>
                 </li>
               </>
             ) : (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">
+                  <Link className="nav-link animated-link" to="/login">
                     Login
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/signup">
+                  <Link className="nav-link animated-link" to="/signup">
                     Signup
                   </Link>
                 </li>
@@ -115,9 +124,7 @@ const Navbar = () => {
                   style={{ borderRadius: "8px" }}
                 >
                   <li className="px-3 py-2">
-                    <strong>
-                      {loggedInUser.email}
-                    </strong>
+                    <strong>{loggedInUser.email}</strong>
                   </li>
                   <hr className="dropdown-divider" />
                   <li className="text-center">

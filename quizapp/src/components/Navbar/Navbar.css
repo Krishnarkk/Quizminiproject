@@ -1,0 +1,27 @@
+.animated-link {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .animated-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background: #0bf707; /* Bootstrap primary color */
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+  
+  .animated-link:hover::after {
+    width: 100%;
+    left: 0;
+  }
+  
+  .navbar-nav .nav-item:hover .nav-link {
+    color: #007bff; /* Change link color on hover */
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+  }
+  

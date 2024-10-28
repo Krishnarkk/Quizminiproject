@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { QuestionContext } from "./QuestionContext";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../common/commonFunctions";
 import EditQuestionModal from "./EditQuestionModal";
 import Loader from "./Loader";
@@ -8,8 +8,7 @@ import "./AllQuestions.css";
 import { toast } from "react-toastify";
 
 const AllQuestions = ({ questions }) => {
-  const { deleteQuestion, loggedInUser } =
-    useContext(QuestionContext);
+  const { deleteQuestion, loggedInUser } = useContext(QuestionContext);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 5;
   const [showModal, setShowModal] = useState(false);
@@ -18,14 +17,12 @@ const AllQuestions = ({ questions }) => {
   const [questionToEdit, setQuestionToEdit] = useState(null);
   const [loading, setLoading] = useState(false);
   const sortedQuestions = [...questions].sort((a, b) => b.id - a.id);
-  const navigate=useNavigate();
-  //  the index of the last question on the current page
+  const navigate = useNavigate();
+
+  // Calculate pagination
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
-  const currentQuestions = sortedQuestions?.slice(
-    indexOfFirstQuestion,
-    indexOfLastQuestion
-  );
+  const currentQuestions = sortedQuestions?.slice(indexOfFirstQuestion, indexOfLastQuestion);
 
   // Show loader when the component first loads
   useEffect(() => {
@@ -51,7 +48,6 @@ const AllQuestions = ({ questions }) => {
     );
   }
 
-
   const handleDeleteClick = (questionId) => {
     setQuestionToDelete(questionId);
     setShowModal(true);
@@ -74,17 +70,17 @@ const AllQuestions = ({ questions }) => {
       setShowEditModal(true);
     }, 600);
   };
-  
-  const handleAnswerNavigation=(qId)=>{
+
+  const handleAnswerNavigation = (qId) => {
     if (!loggedInUser?.username) {
       toast.warning("Please login to add your answer");
-      setTimeout(()=>{
-        navigate("/login")
-      },300)
+      setTimeout(() => {
+        navigate("/login");
+      }, 300);
       return;
     }
     return navigate(`/add-answer/${qId}`);
-  }
+  };
 
   return (
     <div>
@@ -98,7 +94,6 @@ const AllQuestions = ({ questions }) => {
               <div className="d-flex justify-content-between align-items-center">
                 <h6>
                   <span className="badge bg-secondary">
-                    {" "}
                     {question.category}
                   </span>
                 </h6>
@@ -117,7 +112,18 @@ const AllQuestions = ({ questions }) => {
               <h5 className="card-title text-danger question-title">
                 {question.title}?
               </h5>
-              <p className="card-text">Answer:</p>
+              <p className="card-text">
+                {question?.answers.length > 0 && (
+                  <>
+                    All Answers: 
+                    <span className="answer-count">
+                      {question?.answers.length} {question?.answers.length === 1 ? 'answer' : 'answers'} 
+                      <span className="text-muted"   onClick={() => handleAnswerNavigation(question.id)} 
+          style={{ cursor: 'pointer' }}> (view more)</span>
+                    </span>
+                  </>
+                ) }
+              </p>
               <ul>
                 {question.answers.length > 0 ? (
                   <li className="text-success">{question?.answers[0].text}</li>
@@ -132,8 +138,6 @@ const AllQuestions = ({ questions }) => {
               >
                 Click to Add Your Answer
               </button>
-              {/* </Link> */}
-
               <div className="d-flex justify-content-between mt-4">
                 <h5 className="text-truncate mb-0 small">
                   Posted By: {question?.postedBy || "John"}
@@ -161,9 +165,7 @@ const AllQuestions = ({ questions }) => {
           {Array.from({ length: totalPages }, (_, index) => (
             <li
               key={index + 1}
-              className={`page-item ${
-                currentPage === index + 1 ? "active" : ""
-              }`}
+              className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
             >
               <button onClick={() => paginate(index + 1)} className="page-link">
                 {index + 1}
@@ -171,11 +173,7 @@ const AllQuestions = ({ questions }) => {
             </li>
           ))}
 
-          <li
-            className={`page-item ${
-              currentPage === totalPages ? "disabled" : ""
-            }`}
-          >
+          <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
             <button
               className="page-link"
               onClick={() => paginate(currentPage + 1)}
