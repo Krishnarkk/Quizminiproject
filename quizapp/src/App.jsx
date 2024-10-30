@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import LandingPage from "./components/Navbar/LandingPage";
+import Dashboard from "./components/Dashboard/Dashboard";
 const App = () => {
   return (
     <>
@@ -27,6 +28,7 @@ const App = () => {
               <Route path="/add-answer/:questionId" element={<AddAnswers />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<Dashboard/>}/>
             </Routes>
           </div>
           <Footer />

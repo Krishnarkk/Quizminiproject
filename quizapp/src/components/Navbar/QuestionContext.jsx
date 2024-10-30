@@ -139,8 +139,8 @@ const QuestionProvider = ({ children }) => {
       return question;
     });
 
-    setQuestions(updatedQuestions); // Update state
-    localStorage.setItem("questions", JSON.stringify(updatedQuestions)); // Sync with local storage
+    setQuestions(updatedQuestions);
+    localStorage.setItem("questions", JSON.stringify(updatedQuestions)); 
   },[questions]);
 
   const deleteAnswer = useCallback((questionId, answerIdx) => {
@@ -179,7 +179,7 @@ const signUp = useCallback((username, password, email) => {
   const userExists = users.some((user) => user.username === username || user.email === email);
 
   if (!userExists) {
-    const newUser = { username, password, email };
+    const newUser = { username, password, email,registeredAt: new Date().toISOString() };
     const updatedUsers = [...users, newUser];
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     setLoggedInUser(newUser);

@@ -3,7 +3,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { QuestionContext } from "./QuestionContext";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/mirafra-logo.svg";
-import "./Navbar.css"; // Import CSS file for additional styles
+import "./Navbar.css";
 
 const Navbar = () => {
   const { loggedInUser, logout, toggleTheme, isDarkTheme } =
@@ -64,6 +64,14 @@ const Navbar = () => {
                     to="/add-question"
                   >
                     Post  Questions
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link text-danger fw-bolder animated-link"
+                    to="/dashboard"
+                  >
+                    Dashboard
                   </Link>
                 </li>
               </>
