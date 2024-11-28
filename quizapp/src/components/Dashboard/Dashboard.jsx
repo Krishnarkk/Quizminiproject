@@ -22,6 +22,8 @@ import {
 import { QuestionContext } from "../Navbar/QuestionContext";
 import { useNavigate } from "react-router-dom";
 import UsersData from "./UsersData";
+import BasicPie from "./BasicPie";
+import QuestionImg from "../../assets/questionMark.png";
 
 ChartJS.register(
   LineElement,
@@ -85,13 +87,29 @@ const Dashboard = () => {
   };
 
   const data = [
-    { title: "Questions", value: qCount, theme: "red" },
-    { title: "Answers", value: totalAnswers, theme: "green" },
-    { title: "Users", value: allUsersLength, theme: "grey" },
+    {
+      title: "Questions",
+      value: qCount,
+      theme: "linear-gradient(45deg, #c206c8, #8e44ad)",
+      pic:QuestionImg
+    },
+    {
+      title: "Answers",
+      value: totalAnswers,
+      theme: "linear-gradient(45deg, #f39c12, #f1c40f)",
+      pic:""
+    },
+    {
+      title: "Users",
+      value: allUsersLength,
+      theme: "linear-gradient(45deg, #c80683, #e74c3c)",
+      pic:""
+    },
     {
       title: "New Users Today",
       value: newUsersThisWeek[new Date().getDay()] || 0,
-      theme: "cyan",
+      theme: "linear-gradient(45deg, #00bcd4, #1e88e5)",
+      pic:""
     },
   ];
 
@@ -138,13 +156,22 @@ const Dashboard = () => {
       >
         <Typography variant="h3">Dashboard</Typography>
       </Box>
-      <Grid container spacing={3} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center">
         {data.map((item, index) => (
-          <Grid item xs={12} sm={4} key={index}>
+          <Grid item xs={12} sm={4} md={3} key={index}>
             <Fade in={true} timeout={(index + 1) * 1000}>
               <Card
                 variant="outlined"
-                sx={{ background: item.theme, cursor: "pointer" }}
+                sx={{
+                  background: item.theme,
+                  cursor: "pointer",
+                  boxShadow: 8,
+                  borderRadius: 1,
+                  transition: "transform 2s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.07)",
+                  },
+                }}
                 onClick={() => handleNavigation(item)}
               >
                 <CardContent>
@@ -155,20 +182,42 @@ const Dashboard = () => {
                   >
                     {item.title}
                   </Typography>
+                 {/* <img src={item?.pic}/> */}
                   <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                     flexDirection="column"
+                    position="relative"
+                    sx={{
+                      height: "50px",
+                      width: "50px",
+                      borderRadius: "50%",
+                      background: "rgba(255, 255, 255, 0.1)",
+                    }}
                   >
                     <CircularProgress
                       variant="determinate"
                       value={(item.value / 200) * 100}
+                      size={43}
+                      color="success"
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        zIndex: 1,
+                      }}
                     />
                     <Typography
-                      variant="h3"
-                      color="text.secondary"
-                      style={{ marginTop: "10px" }}
+                      variant="h5"
+                      color="white"
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        fontWeight: "bold",
+                      }}
                     >
                       {item.value}
                     </Typography>
@@ -179,17 +228,36 @@ const Dashboard = () => {
           </Grid>
         ))}
       </Grid>
-      <Box marginTop={4}>
-        <Typography variant="h5" component="div">
-          Users Growth Over Day
-        </Typography>
-        <Box width={600}>
-          <Line data={chartData} options={chartOptions} />
-        </Box>
+
+      <Box marginTop={4} sx={{ padding: "52px" }}>
+        <Grid container spacing={4} justifyContent="center">
+          {/* Line Chart */}
+          <Grid item xs={12} sm={6} md={6}>
+            <Typography variant="h5" component="div" textAlign="center">
+              Users Growth Over Day
+            </Typography>
+            <Box width="100%" height={200}>
+              <Line data={chartData} options={chartOptions} />
+            </Box>
+          </Grid>
+
+          {/* Pie Chart */}
+          <Grid item xs={12} sm={6} md={6}>
+            <Typography variant="h5" component="div" textAlign="center">
+              Questions Distribution by Category
+            </Typography>
+            <Box width="100%" height={200}>
+              <BasicPie allQuestions={questions} />
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
+
       <UsersData isDialogOpen={isDialogOpen} onClose={handleCloseDialog} />
     </Container>
   );
 };
 
 export default Dashboard;
+
+

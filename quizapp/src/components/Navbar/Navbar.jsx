@@ -14,7 +14,7 @@ const Navbar = () => {
     logout();
     navigate("/login");
   };
-
+  console.log(loggedInUser);
   return (
     <nav
       className={`navbar navbar-expand-lg sticky-top ${
@@ -28,7 +28,12 @@ const Navbar = () => {
     >
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src={logo} style={{ width: "10vw" }} alt="Logo" className="logo-img" />
+          <img
+            src={logo}
+            style={{ width: "10vw" }}
+            alt="Logo"
+            className="logo-img"
+          />
         </Link>
         <button
           className="navbar-toggler"
@@ -46,7 +51,11 @@ const Navbar = () => {
             {loggedInUser ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link animated-link" aria-current="page" to="/">
+                  <Link
+                    className="nav-link animated-link"
+                    aria-current="page"
+                    to="/"
+                  >
                     Home
                   </Link>
                 </li>
@@ -63,7 +72,7 @@ const Navbar = () => {
                     className="nav-link text-danger fw-bolder animated-link"
                     to="/add-question"
                   >
-                    Post  Questions
+                    Post Questions
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -80,11 +89,6 @@ const Navbar = () => {
                 <li className="nav-item">
                   <Link className="nav-link animated-link" to="/login">
                     Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link animated-link" to="/signup">
-                    Signup
                   </Link>
                 </li>
               </>
@@ -132,7 +136,7 @@ const Navbar = () => {
                   style={{ borderRadius: "8px" }}
                 >
                   <li className="px-3 py-2">
-                    <strong>{loggedInUser.email}</strong>
+                    <strong>{loggedInUser.username.toUpperCase()}</strong>
                   </li>
                   <hr className="dropdown-divider" />
                   <li className="text-center">

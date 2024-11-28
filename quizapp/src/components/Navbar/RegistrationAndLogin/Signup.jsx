@@ -2,7 +2,8 @@ import React, { useState, useContext } from "react";
 import { QuestionContext } from "../QuestionContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import Banner from "../../../assets/banner.png";
+import mirLogo from "../../../assets/mirLogo.svg";
 const Signup = () => {
   const { signUp, isDarkTheme } = useContext(QuestionContext); // Access isDarkTheme from context
   const navigate = useNavigate();
@@ -37,7 +38,14 @@ const Signup = () => {
 
   return (
     <div className={`container d-flex align-items-center justify-content-center min-vh-100`}>
-      <div className="col-md-4">
+       <div className="col-lg-6 d-flex justify-content-center align-items-center text-white">
+        <div className="text-center">
+          <img src={mirLogo} className="mLogo mb-3" alt="Mirafra Logo" />
+          <img src={Banner} className="banner w-100" alt="Banner" />
+        </div>
+      </div>
+      <div className="col-lg-6 d-flex justify-content-center align-items-center">
+      <div className="col-md-8 col-lg-8">
         <h3 className="text-center title animate-slide-fade">Signup</h3>
         <form onSubmit={handleSignup} className={`shadow p-4 rounded ${isDarkTheme ? 'bg-secondary text-white' : 'bg-light'}`}>
           <div className="mb-3">
@@ -83,6 +91,7 @@ const Signup = () => {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 };

@@ -91,3 +91,43 @@
 .text-white {
   color: white;
 }
+
+
+.mLogo{
+  position: absolute;
+  left: 28%;
+  width: 20rem;
+}
+
+.banner{
+  position: relative;
+  top: 2rem;
+}
+
+
+
+.add-question-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-question-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.add-question-btn:focus {
+  outline: none;
+}

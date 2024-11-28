@@ -12,7 +12,7 @@
   width: 60%;
   height: 60%;
   object-fit: cover;
-  animation: zoom 4.5s infinite;
+  animation: zoom 1.5s ease-in-out;
 }
 
 @keyframes zoom {
